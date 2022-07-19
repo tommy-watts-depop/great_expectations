@@ -1,0 +1,14 @@
+[build-sytem]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.mypy]
+warn_unused_configs = true
+ignore_missing_imports = true
+follow_imports = "silent"
+
+# mypy per-module options:
+
+# [[tool.mypy.overrides]]
+# module = "mycode.foo.*"
+# disallow_untyped_defs = true
