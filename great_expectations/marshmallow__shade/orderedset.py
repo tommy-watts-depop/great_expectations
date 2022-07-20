@@ -21,13 +21,14 @@
 #     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #     OTHER DEALINGS IN THE SOFTWARE.
 from collections.abc import MutableSet
+from typing import Any, Dict, Iterator
 
 
 class OrderedSet(MutableSet):
     def __init__(self, iterable=None) -> None:
-        self.end = end = []
+        self.end = end = []  # type: ignore
         end += [None, end, end]  # sentinel node for doubly linked list
-        self.map = {}  # key --> [key, prev, next]
+        self.map: Dict = {}  # key --> [key, prev, next]
         if iterable is not None:
             self |= iterable
 
@@ -49,14 +50,14 @@ class OrderedSet(MutableSet):
             prev[2] = next
             next[1] = prev
 
-    def __iter__(self) -> None:
+    def __iter__(self) -> Iterator[Any]:
         end = self.end
         curr = end[2]
         while curr is not end:
             yield curr[0]
             curr = curr[2]
 
-    def __reversed__(self) -> None:
+    def __reversed__(self) -> Iterator[Any]:
         end = self.end
         curr = end[1]
         while curr is not end:
