@@ -124,7 +124,7 @@ def type_check(ctx, packages, install_types=False):
         # "execution_engine",  # 109
         # "expectations",  # 462
         "jupyter_ux",  # 0
-        "marshmallow__shade",  # 14
+        # "marshmallow__shade",  # 14
         "profile",  # 0
         # "render",  # 87
         # "rule_based_profiler",  # 469
