@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 warn_unused_configs = true
 ignore_missing_imports = true
 follow_imports = "silent"
+warn_redundant_casts = true
 
 # mypy per-module options:
 
