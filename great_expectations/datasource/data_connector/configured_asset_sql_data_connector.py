@@ -194,6 +194,7 @@ class ConfiguredAssetSqlDataConnector(DataConnector):
                 batch_identifiers=IDDict(batch_identifiers),
                 batch_spec_passthrough=batch_request.batch_spec_passthrough,
             )
+            #
             if batch_definition_matches_batch_request(batch_definition, batch_request):
                 batch_definition_list.append(batch_definition)
 

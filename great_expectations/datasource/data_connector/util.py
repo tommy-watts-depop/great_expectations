@@ -72,8 +72,20 @@ def batch_definition_matches_batch_request(
         and batch_request.data_asset_name != batch_definition.data_asset_name
     ):
         return False
-
     if batch_request.data_connector_query:
+        # TODO: ConfiguredAssetSqlDataConnector
+        # doesn't use a real BatchFilter object like FileSystem, which means only batch_filter_parameter is supported
+        # make sure this isn't repeated.
+        # TODO also add test do test that this error is done
+        # this is
+        # limit: Any = batch_request.data_connector_query.get("limit")
+        # index: Any = batch_request.data_connector_query.get("index")
+        # custom_filter_function: Any = batch_request.data_connector_query.get("custom_filter_function")
+        # if custom_filter_function or limit or index:
+        #     raise ge_exceptions.InvalidBatchRequestError(
+        #         "I am an error"
+        #     )
+        #
         batch_filter_parameters: Any = batch_request.data_connector_query.get(
             "batch_filter_parameters"
         )
