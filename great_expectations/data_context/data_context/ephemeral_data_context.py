@@ -42,10 +42,29 @@ class EphemeralDataContext(AbstractDataContext):
             config=project_config
         )
         self._config_variables = self._load_config_variables()
+        self._variables = self._init_variables()
         super().__init__(runtime_environment=runtime_environment)
 
     def _init_variables(self) -> EphemeralDataContextVariables:
-        raise NotImplementedError
+        variables: EphemeralDataContextVariables = EphemeralDataContextVariables(
+            config=self._project_config,
+        )
+        return variables
+
+    def _init_datasource_store(self) -> None:
+        from great_expectations.data_context.store.datasource_store import (
+            DatasourceStore,
+        )
+
+        store_name: str = "datasource_store"  # Never explicitly referenced but adheres
+        # to the convention set by other internal Stores
+        store_backend: dict = {"class_name": "InMemoryStoreBackend"}
+
+        datasource_store: DatasourceStore = DatasourceStore(
+            store_name=store_name,
+            store_backend=store_backend,
+        )
+        self._datasource_store = datasource_store
 
     def _save_project_config(self) -> None:
         """Since EphemeralDataContext does not have config as a file, display logging message instead"""

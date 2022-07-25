@@ -47,7 +47,30 @@ class FileDataContext(AbstractDataContext):
         self._project_config = self._apply_global_config_overrides(
             config=project_config
         )
+        self._variables = self._init_variables()
         super().__init__(runtime_environment=runtime_environment)
+
+    def _init_datasource_store(self) -> None:
+        from great_expectations.data_context.store.datasource_store import (
+            DatasourceStore,
+        )
+
+        store_name: str = "datasource_store"  # Never explicitly referenced but adheres
+        # to the convention set by other internal Stores
+        store_backend: dict = {"class_name": "InlineStoreBackend"}
+        runtime_environment: dict = {
+            "root_directory": self.root_directory,
+            "data_context": self,
+            # By passing this value in our runtime_environment,
+            # we ensure that the same exact context (memory address and all) is supplied to the Store backend
+        }
+
+        datasource_store: DatasourceStore = DatasourceStore(
+            store_name=store_name,
+            store_backend=store_backend,
+            runtime_environment=runtime_environment,
+        )
+        self._datasource_store = datasource_store
 
     def save_expectation_suite(
         self,
@@ -98,7 +121,11 @@ class FileDataContext(AbstractDataContext):
         return self._context_root_directory
 
     def _init_variables(self) -> FileDataContextVariables:
-        raise NotImplementedError
+        variables: FileDataContextVariables = FileDataContextVariables(
+            config=self._project_config,
+            data_context=self,
+        )
+        return variables
 
     def _save_project_config(self) -> None:
         """Save the current project to disk."""

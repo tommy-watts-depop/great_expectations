@@ -24,6 +24,9 @@ from great_expectations.core.util import (
     determine_progress_bar_method_by_environment,
     nested_update,
 )
+from great_expectations.data_context.store.ge_cloud_store_backend import (
+    GeCloudRESTResource,
+)
 from great_expectations.data_context.types.resource_identifiers import (
     ConfigurationIdentifier,
     GeCloudIdentifier,
@@ -230,6 +233,7 @@ class BaseRuleBasedProfiler(ConfigPeer):
         domain_type_directives_list: Optional[
             List[RuntimeEnvironmentDomainTypeDirectives]
         ] = None,
+        comment: Optional[str] = None,
     ) -> RuleBasedProfilerResult:
         """
         Executes and collects "RuleState" side-effect from all "Rule" objects of this "RuleBasedProfiler".
@@ -243,6 +247,7 @@ class BaseRuleBasedProfiler(ConfigPeer):
             reconciliation_directives: directives for how each rule component should be overwritten
             variables_directives_list: additional/override runtime variables directives (modify "BaseRuleBasedProfiler")
             domain_type_directives_list: additional/override runtime domain directives (modify "BaseRuleBasedProfiler")
+            comment: Optional comment for "citation" of "ExpectationSuite" returned as part of "RuleBasedProfilerResult"
 
         Returns:
             "RuleBasedProfilerResult" dataclass object, containing essential outputs of profiling.
@@ -318,7 +323,9 @@ class BaseRuleBasedProfiler(ConfigPeer):
                 "citation_date": convert_to_json_serializable(
                     data=datetime.datetime.now(datetime.timezone.utc)
                 ),
-                "comment": "Suite created by Rule-Based Profiler with the configuration included.",
+                "comment": comment
+                if comment
+                else "Created by Rule-Based Profiler with the configuration included.",
                 "profiler_config": {
                     "name": self.name,
                     "config_version": self.config_version,
@@ -333,7 +340,7 @@ class BaseRuleBasedProfiler(ConfigPeer):
                 rule_state.rule.name: rule_state.execution_time
                 for rule_state in self.rule_states
             },
-            usage_statistics_handler=self._usage_statistics_handler,
+            _usage_statistics_handler=self._usage_statistics_handler,
         )
 
     def get_expectation_configurations(self) -> List[ExpectationConfiguration]:
@@ -1049,6 +1056,9 @@ class BaseRuleBasedProfiler(ConfigPeer):
             batch_request=batch_request,
             recompute_existing_parameter_values=False,
             reconciliation_directives=DEFAULT_RECONCILATION_DIRECTIVES,
+            variables_directives_list=None,
+            domain_type_directives_list=None,
+            comment=None,
         )
 
     @staticmethod
@@ -1079,6 +1089,9 @@ class BaseRuleBasedProfiler(ConfigPeer):
             batch_request=batch_request,
             recompute_existing_parameter_values=False,
             reconciliation_directives=DEFAULT_RECONCILATION_DIRECTIVES,
+            variables_directives_list=None,
+            domain_type_directives_list=None,
+            comment=None,
         )
 
     @staticmethod
@@ -1108,8 +1121,10 @@ class BaseRuleBasedProfiler(ConfigPeer):
         )
 
         key: Union[GeCloudIdentifier, ConfigurationIdentifier]
-        if ge_cloud_id:
-            key = GeCloudIdentifier(resource_type="contract", ge_cloud_id=ge_cloud_id)
+        if data_context.ge_cloud_mode:
+            key = GeCloudIdentifier(
+                resource_type=GeCloudRESTResource.PROFILER, ge_cloud_id=ge_cloud_id
+            )
         else:
             key = ConfigurationIdentifier(
                 configuration_key=config.name,
@@ -1158,7 +1173,9 @@ class BaseRuleBasedProfiler(ConfigPeer):
 
         key: Union[GeCloudIdentifier, ConfigurationIdentifier]
         if ge_cloud_id:
-            key = GeCloudIdentifier(resource_type="contract", ge_cloud_id=ge_cloud_id)
+            key = GeCloudIdentifier(
+                resource_type=GeCloudRESTResource.PROFILER, ge_cloud_id=ge_cloud_id
+            )
         else:
             key = ConfigurationIdentifier(
                 configuration_key=name,
@@ -1206,7 +1223,9 @@ class BaseRuleBasedProfiler(ConfigPeer):
 
         key: Union[GeCloudIdentifier, ConfigurationIdentifier]
         if ge_cloud_id:
-            key = GeCloudIdentifier(resource_type="contract", ge_cloud_id=ge_cloud_id)
+            key = GeCloudIdentifier(
+                resource_type=GeCloudRESTResource.PROFILER, ge_cloud_id=ge_cloud_id
+            )
         else:
             key = ConfigurationIdentifier(configuration_key=name)
 

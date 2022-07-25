@@ -2,10 +2,12 @@ import datetime
 import locale
 import logging
 import os
+import pathlib
 import random
 import shutil
 import warnings
 from typing import Dict, List, Optional
+from unittest import mock
 
 import numpy as np
 import pandas as pd
@@ -20,11 +22,15 @@ from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.core.expectation_validation_result import (
     ExpectationValidationResult,
 )
+from great_expectations.core.metric_domain_types import MetricDomainTypes
 from great_expectations.core.usage_statistics.usage_statistics import (
     UsageStatisticsHandler,
 )
 from great_expectations.core.util import get_or_create_spark_application
 from great_expectations.data_context import BaseDataContext
+from great_expectations.data_context.store.ge_cloud_store_backend import (
+    GeCloudRESTResource,
+)
 from great_expectations.data_context.store.profiler_store import ProfilerStore
 from great_expectations.data_context.types.base import (
     AnonymizedUsageStatisticsConfig,
@@ -48,7 +54,6 @@ from great_expectations.datasource.data_connector.util import (
     get_filesystem_one_level_directory_glob_path_list,
 )
 from great_expectations.datasource.new_datasource import BaseDatasource, Datasource
-from great_expectations.execution_engine.execution_engine import MetricDomainTypes
 from great_expectations.rule_based_profiler.config import RuleBasedProfilerConfig
 from great_expectations.rule_based_profiler.config.base import (
     ruleBasedProfilerConfigSchema,
@@ -800,9 +805,8 @@ def titanic_v013_multi_datasource_pandas_data_context_with_checkpoints_v1_with_e
 
 
 @pytest.fixture
-def titanic_v013_multi_datasource_multi_execution_engine_data_context_with_checkpoints_v1_with_empty_store_stats_enabled(
+def titanic_v013_multi_datasource_pandas_and_sqlalchemy_execution_engine_data_context_with_checkpoints_v1_with_empty_store_stats_enabled(
     sa,
-    spark_session,
     titanic_v013_multi_datasource_pandas_data_context_with_checkpoints_v1_with_empty_store_stats_enabled,
     tmp_path_factory,
     test_backends,
@@ -856,6 +860,19 @@ def titanic_v013_multi_datasource_multi_execution_engine_data_context_with_check
             "my_sqlite_db_datasource", **yaml.load(datasource_config)
         )
 
+    return context
+
+
+@pytest.fixture
+def titanic_v013_multi_datasource_multi_execution_engine_data_context_with_checkpoints_v1_with_empty_store_stats_enabled(
+    sa,
+    spark_session,
+    titanic_v013_multi_datasource_pandas_and_sqlalchemy_execution_engine_data_context_with_checkpoints_v1_with_empty_store_stats_enabled,
+    tmp_path_factory,
+    test_backends,
+    monkeypatch,
+):
+    context: DataContext = titanic_v013_multi_datasource_pandas_and_sqlalchemy_execution_engine_data_context_with_checkpoints_v1_with_empty_store_stats_enabled
     return context
 
 
@@ -1495,10 +1512,10 @@ def site_builder_data_context_with_html_store_titanic_random(
     context.profile_datasource("random")
     context.profile_datasource(context.list_datasources()[0]["name"])
 
-    context._project_config.anonymous_usage_statistics = {
-        "enabled": True,
-        "data_context_id": "f43d4897-385f-4366-82b0-1a8eda2bf79c",
-    }
+    context.variables.anonymous_usage_statistics = AnonymizedUsageStatisticsConfig(
+        enabled=True,
+        data_context_id="f43d4897-385f-4366-82b0-1a8eda2bf79c",
+    )
 
     return context
 
@@ -1566,10 +1583,10 @@ def site_builder_data_context_v013_with_html_store_titanic_random(
     context.profile_datasource("random")
     context.profile_datasource(context.list_datasources()[0]["name"])
 
-    context._project_config.anonymous_usage_statistics = {
-        "enabled": True,
-        "data_context_id": "f43d4897-385f-4366-82b0-1a8eda2bf79c",
-    }
+    context.variables.anonymous_usage_statistics = AnonymizedUsageStatisticsConfig(
+        enabled=True,
+        data_context_id="f43d4897-385f-4366-82b0-1a8eda2bf79c",
+    )
 
     return context
 
@@ -2316,9 +2333,32 @@ checkpoint_store_name: default_checkpoint_store
     return DataContextConfig(**data_context_config_dict)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
+def ge_cloud_config_e2e() -> GeCloudConfig:
+    """
+    Uses live credentials stored in the Great Expectations Cloud backend.
+    """
+    base_url = os.environ["GE_CLOUD_BASE_URL"]
+    organization_id = os.environ["GE_CLOUD_ORGANIZATION_ID"]
+    access_token = os.environ["GE_CLOUD_ACCESS_TOKEN"]
+    ge_cloud_config = GeCloudConfig(
+        base_url=base_url,
+        organization_id=organization_id,
+        access_token=access_token,
+    )
+    return ge_cloud_config
+
+
+@pytest.fixture
+@mock.patch(
+    "great_expectations.data_context.store.DatasourceStore.list_keys",
+    return_value=[],
+)
 def empty_cloud_data_context(
-    tmp_path, empty_ge_cloud_data_context_config, ge_cloud_config
+    mock_list_keys: mock.MagicMock,  # Avoid making a call to Cloud backend during datasource instantiation
+    tmp_path: pathlib.Path,
+    empty_ge_cloud_data_context_config: DataContextConfig,
+    ge_cloud_config: GeCloudConfig,
 ) -> DataContext:
     project_path = tmp_path / "empty_data_context"
     project_path.mkdir()
@@ -2456,7 +2496,9 @@ def ge_cloud_profiler_id() -> str:
 
 @pytest.fixture
 def ge_cloud_profiler_key(ge_cloud_profiler_id: str) -> GeCloudIdentifier:
-    return GeCloudIdentifier(resource_type="contract", ge_cloud_id=ge_cloud_profiler_id)
+    return GeCloudIdentifier(
+        resource_type=GeCloudRESTResource.PROFILER, ge_cloud_id=ge_cloud_profiler_id
+    )
 
 
 @pytest.fixture
@@ -3115,7 +3157,7 @@ def alice_columnar_table_single_batch(empty_data_context):
     sample_data_relative_path: str = "alice_columnar_table_single_batch_data.csv"
 
     expected_expectation_suite.add_citation(
-        comment="Suite created by Rule-Based Profiler with the configuration included.",
+        comment="Created by Rule-Based Profiler with the configuration included.",
         profiler_config=expected_effective_profiler_config,
     )
 
@@ -4465,7 +4507,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
     }
 
     expected_expectation_suite_oneshot_estimator.add_citation(
-        comment="Suite created by Rule-Based Profiler with the configuration included.",
+        comment="Created by Rule-Based Profiler with the configuration included.",
         profiler_config=expected_effective_profiler_config,
     )
 

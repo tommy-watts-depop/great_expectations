@@ -10,6 +10,9 @@ from great_expectations.data_context.data_context_variables import (
     DataContextVariableSchema,
 )
 from great_expectations.data_context.store.datasource_store import DatasourceStore
+from great_expectations.data_context.store.ge_cloud_store_backend import (
+    GeCloudRESTResource,
+)
 from great_expectations.data_context.types.base import DatasourceConfig
 from great_expectations.data_context.types.resource_identifiers import GeCloudIdentifier
 
@@ -110,7 +113,7 @@ def test_datasource_store_retrieval_cloud_mode(
     ge_cloud_store_backend_config: dict = {
         "class_name": "GeCloudStoreBackend",
         "ge_cloud_base_url": ge_cloud_base_url,
-        "ge_cloud_resource_type": "datasource",
+        "ge_cloud_resource_type": GeCloudRESTResource.DATASOURCE,
         "ge_cloud_credentials": {
             "access_token": ge_cloud_access_token,
             "organization_id": ge_cloud_organization_id,
@@ -124,15 +127,15 @@ def test_datasource_store_retrieval_cloud_mode(
     )
 
     key: GeCloudIdentifier = GeCloudIdentifier(
-        resource_type="datasource", ge_cloud_id="foobarbaz"
+        resource_type=GeCloudRESTResource.DATASOURCE, ge_cloud_id="foobarbaz"
     )
 
-    with patch("requests.patch", autospec=True) as mock_patch:
-        type(mock_patch.return_value).status_code = PropertyMock(return_value=200)
+    with patch("requests.put", autospec=True) as mock_put:
+        type(mock_put.return_value).status_code = PropertyMock(return_value=200)
 
         store.set(key=key, value=datasource_config)
 
-        mock_patch.assert_called_with(
+        mock_put.assert_called_with(
             "https://app.test.greatexpectations.io/organizations/bd20fead-2c31-4392-bcd1-f1e87ad5a79c/datasources/foobarbaz",
             json={
                 "data": {
