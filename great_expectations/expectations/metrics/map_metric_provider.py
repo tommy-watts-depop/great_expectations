@@ -394,6 +394,7 @@ def column_condition_partial(
                     # Trino
                     if hasattr(sqlalchemy_engine, "dialect"):
                         dialect = sqlalchemy_engine.dialect
+                dialect_name: str = sqlalchemy_engine.dialect.name
                 expected_condition = metric_fn(
                     cls,
                     sa.column(column_name),
@@ -403,16 +404,18 @@ def column_condition_partial(
                     _sqlalchemy_engine=sqlalchemy_engine,
                     _metrics=metrics,
                 )
-
                 filter_column_isnull = kwargs.get(
                     "filter_column_isnull", getattr(cls, "filter_column_isnull", True)
                 )
-                if filter_column_isnull:
+                if filter_column_isnull and dialect_name != "bigquery":
                     # If we "filter" (ignore) nulls then we allow null as part of our new expected condition
                     unexpected_condition = sa.and_(
                         sa.not_(sa.column(column_name).is_(None)),
                         sa.not_(expected_condition),
                     )
+                elif filter_column_isnull and dialect_name == "bigquery":
+                    # This is the change!?!?!?:
+                    unexpected_condition = expected_condition
                 else:
                     unexpected_condition = sa.not_(expected_condition)
                 return (
@@ -453,6 +456,7 @@ def column_condition_partial(
                 metrics: Dict[str, Any],
                 runtime_configuration: Dict,
             ):
+                # raise Exception("I AM RUN")
                 (
                     data,
                     compute_domain_kwargs,
