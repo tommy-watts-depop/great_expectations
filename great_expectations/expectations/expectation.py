@@ -1910,6 +1910,7 @@ class ColumnMapExpectation(TableExpectation, ABC):
         execution_engine: Optional[ExecutionEngine] = None,
         runtime_configuration: Optional[dict] = None,
     ):
+        #
         dependencies = super().get_validation_dependencies(
             configuration, execution_engine, runtime_configuration
         )
@@ -2037,13 +2038,13 @@ class ColumnMapExpectation(TableExpectation, ABC):
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):
+        print(f"configuration: {configuration}")
         result_format = self.get_result_format(
             configuration=configuration, runtime_configuration=runtime_configuration
         )
 
         print(f"this is the other side: result format: {result_format}")
         include_unexpected_rows = result_format.get("include_unexpected_rows")
-
         total_count = metrics.get("table.row_count")
         null_count = metrics.get("column_values.nonnull.unexpected_count")
         unexpected_count = metrics.get(f"{self.map_metric}.unexpected_count")

@@ -394,6 +394,7 @@ def column_condition_partial(
                     # Trino
                     if hasattr(sqlalchemy_engine, "dialect"):
                         dialect = sqlalchemy_engine.dialect
+                dialect_name: str = sqlalchemy_engine.dialect.name
                 expected_condition = metric_fn(
                     cls,
                     sa.column(column_name),
@@ -403,16 +404,18 @@ def column_condition_partial(
                     _sqlalchemy_engine=sqlalchemy_engine,
                     _metrics=metrics,
                 )
-
                 filter_column_isnull = kwargs.get(
                     "filter_column_isnull", getattr(cls, "filter_column_isnull", True)
                 )
-                if filter_column_isnull:
+                if filter_column_isnull and dialect_name != "bigquery":
                     # If we "filter" (ignore) nulls then we allow null as part of our new expected condition
                     unexpected_condition = sa.and_(
                         sa.not_(sa.column(column_name).is_(None)),
                         sa.not_(expected_condition),
                     )
+                elif filter_column_isnull and dialect_name == "bigquery":
+                    # This is the change!?!?!?:
+                    unexpected_condition = expected_condition
                 else:
                     unexpected_condition = sa.not_(expected_condition)
                 return (
@@ -453,6 +456,7 @@ def column_condition_partial(
                 metrics: Dict[str, Any],
                 runtime_configuration: Dict,
             ):
+                # raise Exception("I AM RUN")
                 (
                     data,
                     compute_domain_kwargs,
@@ -1920,10 +1924,13 @@ def _sqlalchemy_map_condition_unexpected_count_value(
     unexpected_condition, compute_domain_kwargs, accessor_domain_kwargs = metrics.get(
         "unexpected_condition"
     )
+    # raise Exception(f"metrics: {metrics}")
+
     """
     In order to invoke the "ignore_row_if" filtering logic, "execution_engine.get_domain_records()" must be supplied
     with all of the available "domain_kwargs" keys.
     """
+    # we know this come sup
     domain_kwargs = dict(**compute_domain_kwargs, **accessor_domain_kwargs)
     selectable = execution_engine.get_domain_records(
         domain_kwargs=domain_kwargs,
@@ -1967,8 +1974,9 @@ def _sqlalchemy_map_condition_unexpected_count_value(
                     count_selectable,
                 )
                 execution_engine.engine.execute(inner_case_query)
-
                 count_selectable = temp_table_obj
+
+        # raise Exception(f"hello unexpected_count_query: {count_selectable}")
 
         count_selectable = get_sqlalchemy_selectable(count_selectable)
         unexpected_count_query: Select = (

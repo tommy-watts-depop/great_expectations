@@ -2078,7 +2078,10 @@ WHERE
                 .group_by(sa.column(column))
                 .having(sa.func.count(sa.column(column)) > 1)
             )
-        return sa.column(column).notin_(dup_query)
+
+        res = sa.column(column).notin_(dup_query)
+        # raise Exception(f"here is the query that is actually run: {res}")
+        return res
 
     def _get_dialect_regex_expression(self, column, regex, positive=True):
         try:

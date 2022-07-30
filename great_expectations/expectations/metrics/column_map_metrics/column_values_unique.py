@@ -68,13 +68,20 @@ class ColumnValuesUnique(ColumnMapMetricProvider):
                 .having(sa.func.count(column) > 1)
             )
         else:
+            # this is where the column is defined
             dup_query = (
                 sa.select([column])
                 .select_from(_table)
                 .group_by(column)
                 .having(sa.func.count(column) > 1)
             )
-        return column.notin_(dup_query)
+
+        # raise Exception(f"here is the query: {dup_query}")
+        if sql_engine and dialect and dialect_name == "bigquery":
+            query = column.notin_(dup_query)
+        else:
+            query = column.notin_(dup_query)
+        return query
 
     @column_condition_partial(
         engine=SparkDFExecutionEngine,

@@ -34,6 +34,7 @@ def pytest_generate_tests(metafunc):
         for dir_ in os.listdir(dir_path)
         if os.path.isdir(os.path.join(dir_path, dir_))
     ]
+    expectation_dirs = ["test"]
 
     parametrized_tests = []
     ids = []
@@ -273,7 +274,6 @@ def pytest_generate_tests(metafunc):
                             + ":"
                             + test["title"]
                         )
-
     metafunc.parametrize("test_case", parametrized_tests, ids=ids)
 
 

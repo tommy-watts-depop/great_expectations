@@ -65,9 +65,9 @@
     },
     "tests" : [
       {
-        "title": "positive_case_all_null_values_bigquery_nones_v3_api",
+        "title": "positive_case_all_null_values_bigquery_nones",
         "exact_match_out": false,
-        "only_for": ["bigquery_cfe"],
+        "only_for": ["bigquery"],
         "in": {
           "column": "null"
         },
