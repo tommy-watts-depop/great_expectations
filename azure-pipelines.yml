@@ -169,7 +169,7 @@ stages:
               DOCKER_USER: $(DOCKER_USER)
               DOCKER_TOKEN: $(DOCKER_TOKEN)
 
-      - job: comprehensive_test_
+      - job: test_comprehensive_
         dependsOn: [make_suffix, build_push_]
         condition: succeeded()
         timeoutInMinutes: 120
@@ -198,7 +198,7 @@ stages:
               PYTEST="docker run --network=host --mount type=bind,source=${PWD}/coverage,target=/coverage "
               PYTEST+="-e GE_CLOUD_BASE_URL=$(GE_CLOUD_BASE_URL) -e GE_CLOUD_ACCESS_TOKEN=$(GE_CLOUD_ACCESS_TOKEN) "
               PYTEST+="-e GE_CLOUD_ORGANIZATION_ID=$(GE_CLOUD_ORGANIZATION_ID) greatexpectations/test:${DOCKER_TAG} "
-              PYTEST+="/bin/bash -c \"pytest --postgresql --mysql --msql --trino --spark --cloud "
+              PYTEST+="/bin/bash -c \"pytest --postgresql --mysql --mssql --trino --spark --cloud "
               PYTEST+="--napoleon-docstrings --no-docker-discovery "
               # We should be able to specify --cov-report=xml:path but this doesn't work so we write to the default
               # path and then mv it.
@@ -224,6 +224,20 @@ stages:
               codeCoverageTool: Cobertura
               summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/coverage.xml'
               reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/htmlcov'
+
+      - job: test_usage_stats
+        dependsOn: [make_suffix, build_push_]
+        condition: succeeded()
+        variables:
+          IMAGE_SUFFIX: $[ dependencies.make_suffix.outputs['suffix.IMAGE_SUFFIX'] ]
+          python.version: '3.8'
+        steps:
+          - bash: |
+              ls
+              #DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
+              #PYTEST="docker run --network=host pytest --no-sqlalchemy --aws-integration -v tests/integration/usage_statistics"
+              #echo ${PYTEST}
+              #eval ${PYTEST}
 
   - stage: import_ge
     dependsOn: [lint]
