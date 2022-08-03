@@ -117,10 +117,14 @@ stages:
         name: UnusedImportChecker
 
   - stage: docker_tests
-    dependsOn: [lint, custom_checks]
-    condition: or(eq(variables.isScheduled, true), eq(variables.isReleasePrep, true), eq(variables.isRelease, true), eq(variables.isManual, true))
+    # BDIRKS removed for testing
+    dependsOn: []
+    # dependsOn: [lint, custom_checks]
+    # condition: or(eq(variables.isScheduled, true), eq(variables.isReleasePrep, true), eq(variables.isRelease, true), eq(variables.isManual, true))
     pool:
       vmImage: 'ubuntu-latest'
+    variables:
+      default_python_version: '3.8'
     jobs:
       - job: make_suffix
         steps:
@@ -150,8 +154,10 @@ stages:
               # We repull the develop branch. We could build the local branch that is already present but we should
               # prune it's depth since we don't need the git history.
               CMD="docker buildx build -f docker/Dockerfile.tests --tag greatexpectations/test:${DOCKER_TAG} "
-              CMD+="--target azure --build-arg PYTHON_VERSION=$(python.version) --build-arg SOURCE=github "
-              CMD+="--build-arg BRANCH=develop ."
+              CMD+="--target azure --build-arg PYTHON_VERSION=$(python.version) "
+              # BDIRKS - build from local branch for testing.
+              # CMD+=" --build-arg SOURCE=github --build-arg BRANCH=develop ."
+              CMD+="."
               echo ${CMD}
               eval ${CMD}
             displayName: 'Build python $(python.version) image'
@@ -190,6 +196,10 @@ stages:
           IMAGE_SUFFIX: $[ dependencies.make_suffix.outputs['suffix.IMAGE_SUFFIX'] ]
         steps:
           - bash: |
+              echo "Wait for databases"
+              sleep 30
+
+          - bash: |
               DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
               PULL="docker pull greatexpectations/test:${DOCKER_TAG}"
               echo ${PULL}
@@ -198,7 +208,7 @@ stages:
               PYTEST="docker run --network=host --mount type=bind,source=${PWD}/coverage,target=/coverage "
               PYTEST+="-e GE_CLOUD_BASE_URL=$(GE_CLOUD_BASE_URL) -e GE_CLOUD_ACCESS_TOKEN=$(GE_CLOUD_ACCESS_TOKEN) "
               PYTEST+="-e GE_CLOUD_ORGANIZATION_ID=$(GE_CLOUD_ORGANIZATION_ID) greatexpectations/test:${DOCKER_TAG} "
-              PYTEST+="/bin/bash -c \"pytest --postgresql --mysql --trino --spark --cloud "
+              PYTEST+="/bin/bash -c \"pytest --postgresql --mysql --mssql --trino --spark --cloud "
               PYTEST+="--napoleon-docstrings --no-docker-discovery "
               # We should be able to specify --cov-report=xml:path but this doesn't work so we write to the default
               # path and then mv it.
@@ -230,14 +240,33 @@ stages:
         condition: succeeded()
         variables:
           IMAGE_SUFFIX: $[ dependencies.make_suffix.outputs['suffix.IMAGE_SUFFIX'] ]
-          python.version: '3.8'
         steps:
           - bash: |
-              ls
-              #DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
-              #PYTEST="docker run --network=host pytest --no-sqlalchemy --aws-integration -v tests/integration/usage_statistics"
-              #echo ${PYTEST}
-              #eval ${PYTEST}
+              DOCKER_TAG="$(default_python_version)_$(IMAGE_SUFFIX)"
+              PULL="docker pull greatexpectations/test:${DOCKER_TAG}"
+              echo ${PULL}
+              eval ${PULL}
+              PYTEST="docker run --network=host pytest --no-sqlalchemy --aws-integration -v tests/integration/usage_statistics"
+              echo ${PYTEST}
+              eval ${PYTEST}
+
+      - job: test_cli
+        dependsOn: [make_suffix, build_push_]
+        condition: succeeded()
+        services:
+          postgres: postgres
+        variables:
+          IMAGE_SUFFIX: $[ dependencies.make_suffix.outputs['suffix.IMAGE_SUFFIX'] ]
+        steps:
+          - bash: |
+              DOCKER_TAG="$(default_python_version)_$(IMAGE_SUFFIX)"
+              PULL="docker pull greatexpectations/test:${DOCKER_TAG}"
+              echo ${PULL}
+              eval ${PULL}
+              PYTEST="docker run --network=host pytest --postgresql --spark --aws-integration -v tests/cli"
+              echo ${PYTEST}
+              eval ${PYTEST}
+
 
   - stage: import_ge
     dependsOn: [lint]
