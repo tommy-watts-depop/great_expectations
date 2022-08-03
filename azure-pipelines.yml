@@ -246,7 +246,8 @@ stages:
               PULL="docker pull greatexpectations/test:${DOCKER_TAG}"
               echo ${PULL}
               eval ${PULL}
-              PYTEST="docker run --network=host pytest --no-sqlalchemy --aws-integration -v tests/integration/usage_statistics"
+              PYTEST="docker run --network=host greatexpectations/test:${DOCKER_TAG} "
+              PYTEST+="pytest --no-sqlalchemy --aws-integration -v tests/integration/usage_statistics"
               echo ${PYTEST}
               eval ${PYTEST}
 
@@ -263,7 +264,8 @@ stages:
               PULL="docker pull greatexpectations/test:${DOCKER_TAG}"
               echo ${PULL}
               eval ${PULL}
-              PYTEST="docker run --network=host pytest --postgresql --spark --aws-integration -v tests/cli"
+              PYTEST="docker run --network=host greatexpectations/test:${DOCKER_TAG} "
+              PYTEST+="pytest --postgresql --spark --aws-integration -v tests/cli"
               echo ${PYTEST}
               eval ${PYTEST}
 

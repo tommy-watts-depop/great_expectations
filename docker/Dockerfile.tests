@@ -13,7 +13,7 @@ ENV ACCEPT_EULA=Y
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt update && \
-    apt install default-jre unixodbc unixodbc-dev msodbcsql18 locales locales-all -y && \
+    apt install default-jre unixodbc unixodbc-dev msodbcsql17 locales locales-all -y && \
     apt clean && \
     rm /etc/apt/sources.list.d/mssql-release.list
 RUN python -m pip install --no-cache-dir --upgrade pip
