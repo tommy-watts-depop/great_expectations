@@ -326,7 +326,7 @@ stages:
           - bash: |
               DOCKER_TAG="$(default_python_version)_$(IMAGE_SUFFIX)"
               PYTEST="docker run --network=host greatexpectations/test:${DOCKER_TAG} "
-              PYTEST+="pytest tests/cli"
+              PYTEST+="pytest -v tests/cli"
               echo ${PYTEST}
               eval ${PYTEST}
 
