@@ -205,6 +205,7 @@ stages:
           # File ticket saving docker artifact
           # File ticket about steps I couldn't move over
           # Look into and file ticket about util.py build_test_backends_list and early exit
+          # File ticket about reloading and failing cli tests
           - bash: |
               DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
               mkdir coverage
@@ -216,6 +217,7 @@ stages:
               # path and then mv it.
               PYTEST+="--junitxml=/coverage/junit/test-results.xml --cov=. --cov-report=xml --cov-report=html:/coverage/htmlcov "
               PYTEST+="--ignore=tests/cli --ignore=tests/integration/usage_statistics "
+              # The last \" closes the quote from bash -c \".
               PYTEST+="&& mv coverage.xml /coverage/coverage.xml\""
               echo ${PYTEST}
               eval ${PYTEST}
@@ -288,11 +290,12 @@ stages:
               done;
               printf "\n"
           - bash: |
+              mkdir script
+              echo "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));" > script/mysql_setup.sql
               DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
-              PYTEST="docker run --network=host greatexpectations/test:${DOCKER_TAG} "
-              PYTEST+="/bin/bash -c \""
-              PYTEST+="echo \"SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));\" > mysql_setup_script.sql && "
-              PYTEST+="mysql --host=localhost --protocol=TCP --port=3306 --user=root --password='' --reconnect < mysql_setup_script.sql && "
+              PYTEST="docker run --network=host --mount type=bind,source=${PWD}/script,target=/script "
+              PYTEST+="greatexpectations/test:${DOCKER_TAG} /bin/bash -c \""
+              PYTEST+="mysql --host=localhost --protocol=TCP --port=3306 --user=root --password='' --reconnect < /script/mysql_setup.sql && "
               # The last \" closes the quote from bash -c \".
               PYTEST+="pytest --mysql --ignore=tests/cli --ignore=tests/integration/usage_statistics\""
               echo ${PYTEST}
