@@ -198,6 +198,13 @@ stages:
               echo "Wait for databases"
               sleep 30
 
+          # BDIRKS: move out mysql, trino, cloud into their own tests.
+          # TEST EPIC
+          # File a ticket about coverage being meaningless
+          # File ticket about making tests mutually exclusive
+          # File ticket saving docker artifact
+          # File ticket about steps I couldn't move over
+          # Look into and file ticket about util.py build_test_backends_list and early exit
           - bash: |
               DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
               PULL="docker pull greatexpectations/test:${DOCKER_TAG}"
