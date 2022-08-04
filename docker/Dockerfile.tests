@@ -5,17 +5,7 @@ ARG SOURCE=local
 
 # Our base image is the official python image. If needed we can look into slimming this down.
 FROM python:${PYTHON_VERSION} AS base
-# ACCEPT_EULA is set for installing msodbcsql18
-# We also hardcode we are on debian 11. If we wanted to generalize we could:
-# apt install lsb-release
-# and then s/11/$(lsb_release -rs)/
-ENV ACCEPT_EULA=Y
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-    apt update && \
-    apt install default-jre unixodbc unixodbc-dev msodbcsql17 locales locales-all -y && \
-    apt clean && \
-    rm /etc/apt/sources.list.d/mssql-release.list
+RUN apt update && apt install default-jre unixodbc unixodbc-dev locales locales-all -y && apt clean
 RUN python -m pip install --no-cache-dir --upgrade pip
 
 FROM base as build_local
