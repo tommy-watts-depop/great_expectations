@@ -413,9 +413,8 @@ def column_condition_partial(
                         sa.not_(sa.column(column_name).is_(None)),
                         sa.not_(expected_condition),
                     )
-                elif filter_column_isnull and dialect_name == "bigquery":
-                    # This is the change!?!?!?:
-                    unexpected_condition = expected_condition
+                # elif filter_column_isnull and dialect_name == "bigquery":
+                #    unexpected_condition = expected_condition
                 else:
                     unexpected_condition = sa.not_(expected_condition)
                 return (
@@ -456,7 +455,6 @@ def column_condition_partial(
                 metrics: Dict[str, Any],
                 runtime_configuration: Dict,
             ):
-                # raise Exception("I AM RUN")
                 (
                     data,
                     compute_domain_kwargs,
