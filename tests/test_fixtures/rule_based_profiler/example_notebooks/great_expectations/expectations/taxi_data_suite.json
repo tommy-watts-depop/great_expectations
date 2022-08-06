@@ -1,0 +1,3521 @@
+{
+  "data_asset_type": null,
+  "expectation_suite_name": "taxi_data_suite",
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "max_value": 10000,
+        "min_value": 10000
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {},
+            "metric_dependencies": null,
+            "metric_name": "table.row_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_table_columns_to_match_set",
+      "kwargs": {
+        "column_set": [
+          "congestion_surcharge",
+          "fare_amount",
+          "dropoff_datetime",
+          "pickup_location_id",
+          "tolls_amount",
+          "rate_code_id",
+          "total_amount",
+          "vendor_id",
+          "pickup_datetime",
+          "mta_tax",
+          "passenger_count",
+          "tip_amount",
+          "payment_type",
+          "store_and_fwd_flag",
+          "dropoff_location_id",
+          "trip_distance",
+          "improvement_surcharge",
+          "extra"
+        ],
+        "exact_match": null
+      },
+      "meta": {
+        "profiler_details": {
+          "success_ratio": 1.0
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "pickup_datetime"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "pickup_datetime"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "dropoff_datetime"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "dropoff_datetime"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "trip_distance"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "trip_distance"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "pickup_location_id"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "pickup_location_id"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "dropoff_location_id"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "dropoff_location_id"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "fare_amount"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "fare_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "extra"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "mta_tax"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "tip_amount"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tip_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "tolls_amount"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "improvement_surcharge"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "total_amount"
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "total_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column_values.nonnull.unexpected_count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "passenger_count",
+        "max_value": 0.0,
+        "min_value": 0.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "passenger_count"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "passenger_count",
+        "max_value": 6.921992199219922,
+        "min_value": 6.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "passenger_count"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "passenger_count",
+        "max_value": 6.921992199219922,
+        "min_value": 0.0,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "passenger_count"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "passenger_count"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "passenger_count",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.000100010001,
+              2.0
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "passenger_count"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "passenger_count",
+        "max_value": 1.0,
+        "min_value": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "passenger_count"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "passenger_count",
+        "max_value": 1.604962672390099,
+        "min_value": 1.332254186753711,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "passenger_count"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "passenger_count",
+        "max_value": 1.261777431438225,
+        "min_value": 1.01150683788425,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "passenger_count"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "trip_distance",
+        "max_value": 0.0,
+        "min_value": -14.769281928192822,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "trip_distance"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "trip_distance",
+        "max_value": 133.03000000000065,
+        "min_value": 35.4,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "trip_distance"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "trip_distance",
+        "max_value": 133.03000000000065,
+        "min_value": -14.769281928192822,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "trip_distance"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "trip_distance"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "trip_distance",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              0.9,
+              1.02
+            ],
+            [
+              1.53,
+              1.87039503950395
+            ],
+            [
+              2.81,
+              3.775007500750074
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "trip_distance"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "trip_distance",
+        "max_value": 1.871643164316432,
+        "min_value": 1.53,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "trip_distance"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "trip_distance",
+        "max_value": 3.707242,
+        "min_value": 2.757964159215922,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "trip_distance"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "trip_distance",
+        "max_value": 4.550532275221741,
+        "min_value": 3.515519249709139,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "trip_distance"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "payment_type",
+        "max_value": 1.0,
+        "min_value": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "payment_type"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "payment_type",
+        "max_value": 4.0,
+        "min_value": 4.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "payment_type"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "payment_type",
+        "max_value": 4.0,
+        "min_value": 1.0,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "payment_type"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "payment_type"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "payment_type",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.734273427342734,
+              2.0
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "payment_type"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "payment_type",
+        "max_value": 1.0,
+        "min_value": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "payment_type"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "payment_type",
+        "max_value": 1.396440788844886,
+        "min_value": 1.2643,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "payment_type"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "payment_type",
+        "max_value": 0.537417023824313,
+        "min_value": 0.469125246452611,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "payment_type"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "fare_amount",
+        "max_value": -6.124902490249024,
+        "min_value": -181.03415341534154,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "fare_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "fare_amount",
+        "max_value": 3004.0,
+        "min_value": 155.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "fare_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "fare_amount",
+        "max_value": 3004.0,
+        "min_value": -181.03415341534154,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "fare_amount"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "fare_amount"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "fare_amount",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              5.868636863686369,
+              6.5
+            ],
+            [
+              8.563056305630562,
+              9.5
+            ],
+            [
+              13.36878687868787,
+              15.5
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "fare_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "fare_amount",
+        "max_value": 9.5,
+        "min_value": 8.561756175617562,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "fare_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "fare_amount",
+        "max_value": 13.818328,
+        "min_value": 11.90444425822582,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "fare_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "fare_amount",
+        "max_value": 32.57179706548982,
+        "min_value": 10.773617349249683,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "fare_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "extra",
+        "max_value": -0.211371137113711,
+        "min_value": -12.87008700870087,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "extra",
+        "max_value": 7.0,
+        "min_value": 4.5,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "extra",
+        "max_value": 7.0,
+        "min_value": -12.87008700870087,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "extra"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "extra"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "extra",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.5
+            ],
+            [
+              0.5,
+              2.5
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "extra",
+        "max_value": 0.5,
+        "min_value": 0.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "extra",
+        "max_value": 1.192212146814681,
+        "min_value": 0.323118933693369,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "extra",
+        "max_value": 1.285411137010894,
+        "min_value": 0.456423174276337,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "mta_tax",
+        "max_value": -0.5,
+        "min_value": -0.5,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "mta_tax",
+        "max_value": 3.0,
+        "min_value": 0.5,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "mta_tax",
+        "max_value": 3.0,
+        "min_value": -0.5,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "mta_tax"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "mta_tax"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "mta_tax",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              0.5,
+              0.5
+            ],
+            [
+              0.5,
+              0.5
+            ],
+            [
+              0.5,
+              0.5
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "mta_tax",
+        "max_value": 0.5,
+        "min_value": 0.5,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "mta_tax",
+        "max_value": 0.49795,
+        "min_value": 0.489825173917392,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "mta_tax",
+        "max_value": 0.096069313161348,
+        "min_value": 0.037058466173431,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "tip_amount",
+        "max_value": 0.0,
+        "min_value": -2.29,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tip_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "tip_amount",
+        "max_value": 281.4287088708871,
+        "min_value": 34.61458945894589,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tip_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "tip_amount",
+        "max_value": 281.4287088708871,
+        "min_value": -2.29,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "tip_amount"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "tip_amount"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "tip_amount",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.88013901390139,
+              1.96
+            ],
+            [
+              2.34,
+              2.992601260126013
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tip_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "tip_amount",
+        "max_value": 1.96,
+        "min_value": 0.874640464046404,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tip_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "tip_amount",
+        "max_value": 2.276983616161616,
+        "min_value": 1.494796,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tip_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "tip_amount",
+        "max_value": 3.765517886562548,
+        "min_value": 2.160614552938528,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tip_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "tolls_amount",
+        "max_value": 0.0,
+        "min_value": -6.12,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "tolls_amount",
+        "max_value": 82.5,
+        "min_value": 23.427394739473954,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "tolls_amount",
+        "max_value": 82.5,
+        "min_value": -6.12,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "tolls_amount"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "tolls_amount"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "tolls_amount",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "tolls_amount",
+        "max_value": 0.0,
+        "min_value": 0.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "tolls_amount",
+        "max_value": 0.4197720170017,
+        "min_value": 0.224073489548955,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "tolls_amount",
+        "max_value": 1.944222134019064,
+        "min_value": 1.269817567073855,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "improvement_surcharge",
+        "max_value": -0.3,
+        "min_value": -0.3,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "improvement_surcharge",
+        "max_value": 0.3,
+        "min_value": 0.3,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "improvement_surcharge",
+        "max_value": 0.3,
+        "min_value": -0.3,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "improvement_surcharge"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "improvement_surcharge"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "improvement_surcharge",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              0.3,
+              0.3
+            ],
+            [
+              0.3,
+              0.3
+            ],
+            [
+              0.3,
+              0.3
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "improvement_surcharge",
+        "max_value": 0.3,
+        "min_value": 0.3,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "improvement_surcharge",
+        "max_value": 0.299708844884488,
+        "min_value": 0.296573435343534,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "improvement_surcharge",
+        "max_value": 0.044108876655992,
+        "min_value": 0.010815155882357,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "total_amount",
+        "max_value": -7.311431143114311,
+        "min_value": -184.59361136113614,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "total_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "total_amount",
+        "max_value": 3004.800000000003,
+        "min_value": 180.96,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "total_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "total_amount",
+        "max_value": 3004.800000000003,
+        "min_value": -184.59361136113614,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "total_amount"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "total_amount"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "total_amount",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              8.283004300430042,
+              11.411685168516854
+            ],
+            [
+              11.3,
+              14.8
+            ],
+            [
+              16.785215521552157,
+              21.321134113411347
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "total_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "total_amount",
+        "max_value": 14.8,
+        "min_value": 11.3,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "total_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "total_amount",
+        "max_value": 19.9747,
+        "min_value": 15.679441000000002,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "total_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "total_amount",
+        "max_value": 33.485968278307155,
+        "min_value": 12.481216252814063,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "total_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "congestion_surcharge",
+        "max_value": 0.0,
+        "min_value": -2.5,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "congestion_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.min",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "congestion_surcharge",
+        "max_value": 2.651665166516652,
+        "min_value": 0.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "congestion_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.max",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "congestion_surcharge",
+        "max_value": 2.651665166516652,
+        "min_value": -2.5,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "congestion_surcharge"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_values_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "congestion_surcharge"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_quantile_values_to_be_between",
+      "kwargs": {
+        "allow_relative_error": false,
+        "column": "congestion_surcharge",
+        "quantile_ranges": {
+          "quantiles": [
+            0.25,
+            0.5,
+            0.75
+          ],
+          "value_ranges": [
+            [
+              0.0,
+              2.5
+            ],
+            [
+              0.0,
+              2.5
+            ],
+            [
+              0.0,
+              2.5
+            ]
+          ]
+        }
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "congestion_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.quantile_values",
+            "metric_value_kwargs": {
+              "allow_relative_error": false,
+              "quantiles": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            }
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_median_to_be_between",
+      "kwargs": {
+        "column": "congestion_surcharge",
+        "max_value": 2.5,
+        "min_value": 0.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "congestion_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.median",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "congestion_surcharge",
+        "max_value": 2.293278815381538,
+        "min_value": 0.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "congestion_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.mean",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_stdev_to_be_between",
+      "kwargs": {
+        "column": "congestion_surcharge",
+        "max_value": 1.065109510967258,
+        "min_value": 0.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "congestion_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.standard_deviation",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "kwargs": {
+        "column": "pickup_datetime",
+        "max_value": 19,
+        "min_value": 19,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_length_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "pickup_datetime"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column_values.length.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_length_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "pickup_datetime"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column_values.length.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "pickup_datetime",
+        "mostly": 1.0,
+        "regex": "(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})(?:.(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})){3}"
+      },
+      "meta": {
+        "profiler_details": {
+          "evaluated_regexes": {
+            "(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})(?:.(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})){3}": 1.0,
+            "(?:[A-Fa-f0-9]){0,4}(?: ?:? ?(?:[A-Fa-f0-9]){0,4}){0,7}": 1.0,
+            "-?\\d+": 1.0,
+            "-?\\d+(?:\\.\\d*)?": 1.0,
+            "<\\/?(?:p|a|b|img)(?: \\/)?>": 0.0,
+            "[A-Za-z0-9\\.,;:!?()\\\"'%\\-]+": 1.0,
+            "\\b[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}-[0-5][0-9a-fA-F]{3}-[089ab][0-9a-fA-F]{3}-\\b[0-9a-fA-F]{12}\\b ": 0.0,
+            "\\d+": 1.0,
+            "\\s+$": 0.0,
+            "^\\s+": 0.0,
+            "https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b(?:[-a-zA-Z0-9@:%_\\+.~#()?&//=]*)": 0.0
+          },
+          "success_ratio": 1.0
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "kwargs": {
+        "column": "dropoff_datetime",
+        "max_value": 19,
+        "min_value": 19,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_length_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "dropoff_datetime"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column_values.length.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_length_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "dropoff_datetime"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column_values.length.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "dropoff_datetime",
+        "mostly": 1.0,
+        "regex": "(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})(?:.(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})){3}"
+      },
+      "meta": {
+        "profiler_details": {
+          "evaluated_regexes": {
+            "(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})(?:.(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})){3}": 1.0,
+            "(?:[A-Fa-f0-9]){0,4}(?: ?:? ?(?:[A-Fa-f0-9]){0,4}){0,7}": 1.0,
+            "-?\\d+": 1.0,
+            "-?\\d+(?:\\.\\d*)?": 1.0,
+            "<\\/?(?:p|a|b|img)(?: \\/)?>": 0.0,
+            "[A-Za-z0-9\\.,;:!?()\\\"'%\\-]+": 1.0,
+            "\\b[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}-[0-5][0-9a-fA-F]{3}-[089ab][0-9a-fA-F]{3}-\\b[0-9a-fA-F]{12}\\b ": 0.0,
+            "\\d+": 1.0,
+            "\\s+$": 0.0,
+            "^\\s+": 0.0,
+            "https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b(?:[-a-zA-Z0-9@:%_\\+.~#()?&//=]*)": 0.0
+          },
+          "success_ratio": 1.0
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "kwargs": {
+        "column": "store_and_fwd_flag",
+        "max_value": 1,
+        "min_value": 1,
+        "mostly": 1.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "column_max_length_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "store_and_fwd_flag"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column_values.length.max",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          },
+          "column_min_length_range_estimator": {
+            "metric_configuration": {
+              "domain_kwargs": {
+                "column": "store_and_fwd_flag"
+              },
+              "metric_dependencies": null,
+              "metric_name": "column_values.length.min",
+              "metric_value_kwargs": null
+            },
+            "num_batches": 36
+          }
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "store_and_fwd_flag",
+        "mostly": 1.0,
+        "regex": "(?:[A-Fa-f0-9]){0,4}(?: ?:? ?(?:[A-Fa-f0-9]){0,4}){0,7}"
+      },
+      "meta": {
+        "profiler_details": {
+          "evaluated_regexes": {
+            "(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})(?:.(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})){3}": 0.0,
+            "(?:[A-Fa-f0-9]){0,4}(?: ?:? ?(?:[A-Fa-f0-9]){0,4}){0,7}": 1.0,
+            "-?\\d+": 0.0,
+            "-?\\d+(?:\\.\\d*)?": 0.0,
+            "<\\/?(?:p|a|b|img)(?: \\/)?>": 0.0,
+            "[A-Za-z0-9\\.,;:!?()\\\"'%\\-]+": 1.0,
+            "\\b[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}-[0-5][0-9a-fA-F]{3}-[089ab][0-9a-fA-F]{3}-\\b[0-9a-fA-F]{12}\\b ": 0.0,
+            "\\d+": 0.0,
+            "\\s+$": 0.0,
+            "^\\s+": 0.0,
+            "https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b(?:[-a-zA-Z0-9@:%_\\+.~#()?&//=]*)": 0.0
+          },
+          "success_ratio": 1.0
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "passenger_count",
+        "mostly": 1.0,
+        "value_set": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "passenger_count"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_unique_value_count_to_be_between",
+      "kwargs": {
+        "column": "passenger_count",
+        "max_value": 8,
+        "min_value": 7,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "passenger_count"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values.count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_proportion_of_unique_values_to_be_between",
+      "kwargs": {
+        "column": "passenger_count",
+        "max_value": 0.000805558352633,
+        "min_value": 0.000673627362736,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "passenger_count"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.unique_proportion",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "store_and_fwd_flag",
+        "mostly": 1.0,
+        "value_set": [
+          "N",
+          "Y"
+        ]
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "store_and_fwd_flag"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_unique_value_count_to_be_between",
+      "kwargs": {
+        "column": "store_and_fwd_flag",
+        "max_value": 2,
+        "min_value": 2,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "store_and_fwd_flag"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values.count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_proportion_of_unique_values_to_be_between",
+      "kwargs": {
+        "column": "store_and_fwd_flag",
+        "max_value": 0.000219925225423,
+        "min_value": 0.0002,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "store_and_fwd_flag"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.unique_proportion",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "payment_type",
+        "mostly": 1.0,
+        "value_set": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "payment_type"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_unique_value_count_to_be_between",
+      "kwargs": {
+        "column": "payment_type",
+        "max_value": 4,
+        "min_value": 4,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "payment_type"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values.count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_proportion_of_unique_values_to_be_between",
+      "kwargs": {
+        "column": "payment_type",
+        "max_value": 0.000439850450847,
+        "min_value": 0.0004,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "payment_type"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.unique_proportion",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "extra",
+        "mostly": 1.0,
+        "value_set": [
+          -0.5,
+          0.0,
+          0.3,
+          0.5,
+          0.8,
+          1.0,
+          1.3,
+          1.8,
+          2.0,
+          2.5,
+          2.75,
+          3.0,
+          3.5,
+          4.5,
+          5.5,
+          7.0,
+          0.11,
+          4.96,
+          -36.71,
+          -1.0,
+          -4.5,
+          -2.0,
+          -1.2
+        ]
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_unique_value_count_to_be_between",
+      "kwargs": {
+        "column": "extra",
+        "max_value": 15,
+        "min_value": 5,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values.count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_proportion_of_unique_values_to_be_between",
+      "kwargs": {
+        "column": "extra",
+        "max_value": 0.001477377737774,
+        "min_value": 0.000492539253925,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "extra"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.unique_proportion",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "mta_tax",
+        "mostly": 1.0,
+        "value_set": [
+          -0.5,
+          0.0,
+          0.87,
+          0.25,
+          0.5,
+          1.44,
+          1.57,
+          3.0,
+          37.51
+        ]
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_unique_value_count_to_be_between",
+      "kwargs": {
+        "column": "mta_tax",
+        "max_value": 4,
+        "min_value": 3,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values.count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_proportion_of_unique_values_to_be_between",
+      "kwargs": {
+        "column": "mta_tax",
+        "max_value": 0.000398869886989,
+        "min_value": 0.0003,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "mta_tax"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.unique_proportion",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "tolls_amount",
+        "mostly": 1.0,
+        "value_set": [
+          0.0,
+          0.5,
+          1.0,
+          1.11,
+          1.5,
+          2.0,
+          2.15,
+          2.16,
+          2.29,
+          2.5,
+          2.54,
+          2.64,
+          2.75,
+          4.32,
+          5.0,
+          6.0,
+          3.0,
+          9.87,
+          9.0,
+          10.0,
+          11.26,
+          4.5,
+          4.75,
+          14.1,
+          15.0,
+          16.0,
+          5.5,
+          5.75,
+          19.0,
+          20.0,
+          21.0,
+          6.93,
+          6.5,
+          24.02,
+          25.0,
+          26.0,
+          7.0,
+          29.32,
+          29.78,
+          30.0,
+          31.12,
+          8.0,
+          8.5,
+          35.0,
+          37.5,
+          41.6,
+          9.5,
+          45.86,
+          48.0,
+          48.75,
+          50.0,
+          10.5,
+          51.98,
+          52.24,
+          52.76,
+          11.5,
+          11.75,
+          60.0,
+          12.0,
+          12.5,
+          17.57,
+          64.87,
+          13.0,
+          13.5,
+          13.75,
+          14.25,
+          14.5,
+          14.75,
+          14.79,
+          15.04,
+          15.14,
+          15.25,
+          15.5,
+          15.75,
+          16.1,
+          16.25,
+          16.35,
+          16.4,
+          16.5,
+          16.6,
+          16.75,
+          17.0,
+          17.1,
+          5.54,
+          17.15,
+          17.25,
+          17.28,
+          17.4,
+          6.11,
+          6.22,
+          18.0,
+          18.35,
+          18.36,
+          18.5,
+          19.25,
+          19.5,
+          19.75,
+          19.85,
+          19.9,
+          20.25,
+          20.5,
+          20.75,
+          21.5,
+          21.6,
+          22.0,
+          22.5,
+          22.86,
+          23.0,
+          23.5,
+          24.5,
+          26.75,
+          27.5,
+          4.58,
+          30.11,
+          18.6,
+          5.76,
+          5.9,
+          6.15,
+          6.76,
+          32.0,
+          32.11,
+          7.26,
+          7.51,
+          33.24,
+          33.5,
+          8.12,
+          8.4,
+          8.62,
+          33.52,
+          9.12,
+          10.08,
+          10.26,
+          10.62,
+          10.76,
+          11.51,
+          11.76,
+          12.12,
+          12.87,
+          13.12,
+          14.15,
+          14.65,
+          2.8,
+          15.4,
+          15.76,
+          3.3,
+          5.12,
+          5.55,
+          5.8,
+          6.05,
+          6.12,
+          7.12,
+          18.65,
+          18.9,
+          5.41,
+          5.73,
+          5.77,
+          6.66,
+          6.84,
+          7.98,
+          8.41,
+          9.66,
+          10.7,
+          11.52,
+          12.66,
+          12.95,
+          13.3,
+          13.7,
+          13.95,
+          14.55,
+          14.66,
+          14.8,
+          14.95,
+          15.3,
+          15.59,
+          15.7,
+          15.8,
+          16.05,
+          16.26,
+          16.49,
+          16.55,
+          16.62,
+          16.8,
+          17.2,
+          17.7,
+          17.87,
+          17.95,
+          18.05,
+          18.24,
+          18.26,
+          18.3,
+          18.38,
+          18.45,
+          18.62,
+          18.8,
+          19.7,
+          19.8,
+          19.87,
+          21.01,
+          21.12,
+          21.52,
+          22.02,
+          22.16,
+          22.38,
+          22.74,
+          22.87,
+          23.62,
+          23.99,
+          24.48,
+          24.7,
+          24.74,
+          25.87,
+          25.99,
+          26.02,
+          26.26,
+          27.38,
+          27.74,
+          29.95,
+          5.6,
+          5.67,
+          82.5,
+          6.17,
+          6.42,
+          7.42,
+          7.92,
+          8.92,
+          17.5,
+          17.75,
+          11.85,
+          12.24,
+          13.92,
+          14.35,
+          14.53,
+          14.6,
+          18.75,
+          15.1,
+          15.28,
+          15.49,
+          15.6,
+          5.28,
+          6.14,
+          6.21,
+          6.28,
+          7.78,
+          0.01,
+          500.05,
+          -6.12,
+          -5.76,
+          -2.8
+        ]
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_unique_value_count_to_be_between",
+      "kwargs": {
+        "column": "tolls_amount",
+        "max_value": 31,
+        "min_value": 18,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values.count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_proportion_of_unique_values_to_be_between",
+      "kwargs": {
+        "column": "tolls_amount",
+        "max_value": 0.003059265926593,
+        "min_value": 0.001838353835384,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "tolls_amount"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.unique_proportion",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "improvement_surcharge",
+        "mostly": 1.0,
+        "value_set": [
+          -0.3,
+          0.0,
+          0.3
+        ]
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_unique_value_count_to_be_between",
+      "kwargs": {
+        "column": "improvement_surcharge",
+        "max_value": 3,
+        "min_value": 3,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values.count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_proportion_of_unique_values_to_be_between",
+      "kwargs": {
+        "column": "improvement_surcharge",
+        "max_value": 0.0003,
+        "min_value": 0.0003,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "improvement_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.unique_proportion",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "congestion_surcharge",
+        "mostly": 1.0,
+        "value_set": [
+          0.0,
+          2.5,
+          2.75,
+          -2.5
+        ]
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "congestion_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_unique_value_count_to_be_between",
+      "kwargs": {
+        "column": "congestion_surcharge",
+        "max_value": 4,
+        "min_value": 0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "congestion_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.distinct_values.count",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_column_proportion_of_unique_values_to_be_between",
+      "kwargs": {
+        "column": "congestion_surcharge",
+        "max_value": 0.000359825982598,
+        "min_value": 0.0,
+        "strict_max": false,
+        "strict_min": false
+      },
+      "meta": {
+        "profiler_details": {
+          "metric_configuration": {
+            "domain_kwargs": {
+              "column": "congestion_surcharge"
+            },
+            "metric_dependencies": null,
+            "metric_name": "column.unique_proportion",
+            "metric_value_kwargs": null
+          },
+          "num_batches": 36
+        }
+      }
+    }
+  ],
+  "ge_cloud_id": null,
+  "meta": {
+    "great_expectations_version": "0.15.17+20.gfad700e4b"
+  }
+}
