@@ -162,23 +162,10 @@ stages:
               # prune it's depth since we don't need the git history.
               CMD="docker buildx build --platform linux/amd64,linux/arm64 -f docker/Dockerfile.tests --tag greatexpectations/test:${DOCKER_TAG} "
               CMD+="--target azure --build-arg PYTHON_VERSION=$(python.version) "
-              CMD+=" --build-arg SOURCE=github --build-arg BRANCH=develop ."
+              CMD+=" --build-arg SOURCE=github --build-arg BRANCH=develop --push ."
               echo ${CMD}
               eval ${CMD}
-            displayName: 'Build python $(python.version) image'
-
-          - bash: |
-              docker login -u ${DOCKER_USER} -p ${DOCKER_TOKEN}
-              DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
-              PUSH="docker push greatexpectations/test:${DOCKER_TAG}"
-              echo ${PUSH}
-              eval ${PUSH}
-              echo "Docker image can be found at https://hub.docker.com/r/greatexpectations/test/tags"
-              echo "Pull it locally using: docker pull greatexpectations/test:${DOCKER_TAG}"
-            displayName: 'Push python $(python.version) image'
-            env:
-              DOCKER_USER: $(DOCKER_USER)
-              DOCKER_TOKEN: $(DOCKER_TOKEN)
+            displayName: 'Build and push $(python.version)'
 
       - job: test_comprehensive_
         dependsOn: [make_suffix, build_push_]
