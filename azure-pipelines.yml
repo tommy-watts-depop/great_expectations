@@ -146,26 +146,26 @@ stages:
           IMAGE_SUFFIX: $[ dependencies.make_suffix.outputs['suffix.IMAGE_SUFFIX'] ]
         steps:
           - bash: |
-              docker buildx ls
-              echo "----"
-              docker context ls
-              echo "----"
+              docker login -u ${DOCKER_USER} -p ${DOCKER_TOKEN}
               # Create a new docker builder to do multi-arch builds
               # See https://docs.docker.com/build/buildx/multiplatform-images/ and
               # https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/containers/build-image?view=azure-devops
               # docker run --privileged --rm tonistiigi/binfmt --install all
               docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
               docker buildx create --name gxbuilder --use
-              docker buildx ls
-              DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
               # We repull the develop branch. We could build the local branch that is already present but we should
               # prune it's depth since we don't need the git history.
-              CMD="docker buildx build --platform linux/amd64,linux/arm64 -f docker/Dockerfile.tests --tag greatexpectations/test:${DOCKER_TAG} "
+              DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
+              CMD="docker buildx build --platform linux/amd64,linux/arm64 -f docker/Dockerfile.tests "
+              CMD+="--tag greatexpectations/test:${DOCKER_TAG} "
               CMD+="--target azure --build-arg PYTHON_VERSION=$(python.version) "
               CMD+=" --build-arg SOURCE=github --build-arg BRANCH=develop --push ."
               echo ${CMD}
               eval ${CMD}
             displayName: 'Build and push $(python.version)'
+            env:
+              DOCKER_USER: $(DOCKER_USER)
+              DOCKER_TOKEN: $(DOCKER_TOKEN)
 
       - job: test_comprehensive_
         dependsOn: [make_suffix, build_push_]
