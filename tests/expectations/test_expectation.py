@@ -1,4 +1,5 @@
 import itertools
+import sys
 from typing import Any, Dict
 
 import pytest
@@ -140,3 +141,7 @@ def test_multicolumn_expectation_validation_errors_with_bad_mostly(
 ):
     with pytest.raises(InvalidExpectationConfigurationError):
         fake_expectation = fake_expectation_cls(config)
+
+
+def test_demo():
+    assert sys.platform == "darwin"
