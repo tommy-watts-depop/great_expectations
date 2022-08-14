@@ -621,6 +621,15 @@ def compute_kde_quantiles_point_estimate(
     lower_quantile_pct: float = false_positive_rate / 2.0
     upper_quantile_pct: float = 1.0 - (false_positive_rate / 2.0)
 
+    metric_values_original: np.ndarray = copy.deepcopy(metric_values)
+
+    datetime_detected: bool = is_ndarray_datetime_dtype(data=metric_values)
+    if datetime_detected:
+        metric_value: Any
+        metric_values = np.asarray(
+            [metric_value.timestamp() for metric_value in metric_values]
+        )
+
     metric_values_density_estimate: stats.gaussian_kde = stats.gaussian_kde(
         metric_values, bw_method=bw_method
     )
@@ -636,16 +645,29 @@ def compute_kde_quantiles_point_estimate(
             n_resamples,
         )
 
-    lower_quantile_point_estimate: np.float64 = numpy_quantile(
+    lower_quantile_point_estimate: Union[
+        np.float64, datetime.datetime
+    ] = numpy_quantile(
         metric_values_gaussian_sample,
         q=lower_quantile_pct,
         method=quantile_statistic_interpolation_method,
     )
-    upper_quantile_point_estimate: np.float64 = numpy_quantile(
+    upper_quantile_point_estimate: Union[
+        np.float64, datetime.datetime
+    ] = numpy_quantile(
         metric_values_gaussian_sample,
         q=upper_quantile_pct,
         method=quantile_statistic_interpolation_method,
     )
+
+    if datetime_detected:
+        lower_quantile_point_estimate = datetime.datetime.fromtimestamp(
+            lower_quantile_point_estimate
+        )
+        upper_quantile_point_estimate = datetime.datetime.fromtimestamp(
+            upper_quantile_point_estimate
+        )
+
     return build_numeric_range_estimation_result(
         metric_values=metric_values,
         min_value=lower_quantile_point_estimate,
