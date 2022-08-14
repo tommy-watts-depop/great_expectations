@@ -39,7 +39,7 @@ from great_expectations.rule_based_profiler.parameter_container import (
     is_fully_qualified_parameter_name_literal_string_format,
 )
 from great_expectations.types import safe_deep_copy
-from great_expectations.util import numpy_quantile
+from great_expectations.util import is_ndarray_datetime_dtype, numpy_quantile
 from great_expectations.validator.metric_configuration import MetricConfiguration
 
 logger = logging.getLogger(__name__)
@@ -820,6 +820,17 @@ def build_numeric_range_estimation_result(
     Returns:
         Structured "NumericRangeEstimationResult" object, containing histogram and value_range attributes.
     """
+    if is_ndarray_datetime_dtype(data=metric_values):
+        """
+        # TODO: <Alex>8/13/2022</Alex>
+        Until proper mechanism for computing histogram of datetime type valued 1-dimensional set of data points is
+        implemented, set "estimation_histogram" to "None" in cases when datetime is encountered in metric computations.
+        """
+        return NumericRangeEstimationResult(
+            estimation_histogram=None,
+            value_range=np.asarray([min_value, max_value]),
+        )
+
     histogram: Tuple[np.ndarray, np.ndarray] = np.histogram(
         a=metric_values, bins=NUM_HISTOGRAM_BINS
     )
