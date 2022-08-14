@@ -626,15 +626,17 @@ class OnboardingDataAssistant(DataAssistant):
         column_quantile_values_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
             DataAssistant.commonly_used_parameter_builders.get_column_quantile_values_metric_multi_batch_parameter_builder()
         )
-        column_median_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
-            DataAssistant.commonly_used_parameter_builders.get_column_median_metric_multi_batch_parameter_builder()
-        )
-        column_mean_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
-            DataAssistant.commonly_used_parameter_builders.get_column_mean_metric_multi_batch_parameter_builder()
-        )
-        column_standard_deviation_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
-            DataAssistant.commonly_used_parameter_builders.get_column_standard_deviation_metric_multi_batch_parameter_builder()
-        )
+        # TODO: <Alex>ALEX</Alex>
+        # column_median_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
+        #     DataAssistant.commonly_used_parameter_builders.get_column_median_metric_multi_batch_parameter_builder()
+        # )
+        # column_mean_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
+        #     DataAssistant.commonly_used_parameter_builders.get_column_mean_metric_multi_batch_parameter_builder()
+        # )
+        # column_standard_deviation_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
+        #     DataAssistant.commonly_used_parameter_builders.get_column_standard_deviation_metric_multi_batch_parameter_builder()
+        # )
+        # TODO: <Alex>ALEX</Alex>
 
         # Step-3: Declare "ParameterBuilder" for every "validation" need in "ExpectationConfigurationBuilder" objects.
 
@@ -733,6 +735,11 @@ class OnboardingDataAssistant(DataAssistant):
             "mostly": 1.0,
             "strict_min": False,
             "strict_max": False,
+            "quantiles": [
+                0.25,
+                0.5,
+                0.75,
+            ],
             "allow_relative_error": False,
             "false_positive_rate": 0.05,
             "estimator": "bootstrap",
@@ -753,9 +760,13 @@ class OnboardingDataAssistant(DataAssistant):
             column_min_metric_multi_batch_parameter_builder_for_metrics,
             column_max_metric_multi_batch_parameter_builder_for_metrics,
             column_quantile_values_metric_multi_batch_parameter_builder_for_metrics,
-            column_median_metric_multi_batch_parameter_builder_for_metrics,
-            column_mean_metric_multi_batch_parameter_builder_for_metrics,
-            column_standard_deviation_metric_multi_batch_parameter_builder_for_metrics,
+            # TODO: <Alex>ALEX</Alex>
+            # TODO: <Alex>ALEX</Alex>
+            # column_median_metric_multi_batch_parameter_builder_for_metrics,
+            # TODO: <Alex>ALEX</Alex>
+            # column_mean_metric_multi_batch_parameter_builder_for_metrics,
+            # column_standard_deviation_metric_multi_batch_parameter_builder_for_metrics,
+            # TODO: <Alex>ALEX</Alex>
         ]
         expectation_configuration_builders: List[ExpectationConfigurationBuilder] = [
             expect_column_min_to_be_between_expectation_configuration_builder,
