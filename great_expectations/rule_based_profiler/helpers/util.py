@@ -1,4 +1,5 @@
 import copy
+import datetime
 import itertools
 import logging
 import re
@@ -39,7 +40,7 @@ from great_expectations.rule_based_profiler.parameter_container import (
     is_fully_qualified_parameter_name_literal_string_format,
 )
 from great_expectations.types import safe_deep_copy
-from great_expectations.util import numpy_quantile
+from great_expectations.util import is_ndarray_datetime_dtype, numpy_quantile
 from great_expectations.validator.metric_configuration import MetricConfiguration
 
 logger = logging.getLogger(__name__)
@@ -568,17 +569,16 @@ def compute_quantiles(
 ) -> NumericRangeEstimationResult:
     lower_quantile = numpy_quantile(
         a=metric_values,
-        q=(false_positive_rate / 2),
+        q=(false_positive_rate / 2.0),
         axis=0,
         method=quantile_statistic_interpolation_method,
     )
     upper_quantile = numpy_quantile(
         a=metric_values,
-        q=1.0 - (false_positive_rate / 2),
+        q=1.0 - (false_positive_rate / 2.0),
         axis=0,
         method=quantile_statistic_interpolation_method,
     )
-
     return build_numeric_range_estimation_result(
         metric_values=metric_values,
         min_value=lower_quantile,
@@ -621,9 +621,19 @@ def compute_kde_quantiles_point_estimate(
     lower_quantile_pct: float = false_positive_rate / 2.0
     upper_quantile_pct: float = 1.0 - (false_positive_rate / 2.0)
 
+    metric_values_original: np.ndarray = copy.deepcopy(metric_values)
+
+    datetime_detected: bool = is_ndarray_datetime_dtype(data=metric_values)
+    if datetime_detected:
+        metric_value: Any
+        metric_values = np.asarray(
+            [metric_value.timestamp() for metric_value in metric_values]
+        )
+
     metric_values_density_estimate: stats.gaussian_kde = stats.gaussian_kde(
         metric_values, bw_method=bw_method
     )
+
     metric_values_gaussian_sample: np.ndarray
     if random_seed:
         metric_values_gaussian_sample = metric_values_density_estimate.resample(
@@ -635,16 +645,28 @@ def compute_kde_quantiles_point_estimate(
             n_resamples,
         )
 
-    lower_quantile_point_estimate: np.float64 = numpy_quantile(
+    lower_quantile_point_estimate: Union[
+        np.float64, datetime.datetime
+    ] = numpy_quantile(
         metric_values_gaussian_sample,
         q=lower_quantile_pct,
         method=quantile_statistic_interpolation_method,
     )
-    upper_quantile_point_estimate: np.float64 = numpy_quantile(
+    upper_quantile_point_estimate: Union[
+        np.float64, datetime.datetime
+    ] = numpy_quantile(
         metric_values_gaussian_sample,
         q=upper_quantile_pct,
         method=quantile_statistic_interpolation_method,
     )
+
+    if datetime_detected:
+        lower_quantile_point_estimate = datetime.datetime.fromtimestamp(
+            lower_quantile_point_estimate
+        )
+        upper_quantile_point_estimate = datetime.datetime.fromtimestamp(
+            upper_quantile_point_estimate
+        )
 
     return build_numeric_range_estimation_result(
         metric_values=metric_values,
@@ -716,8 +738,17 @@ def compute_bootstrap_quantiles_point_estimate(
     computing the stopping criterion, expressed as the optimal number of bootstrap samples, needed to achieve a maximum
     probability that the value of the statistic of interest will be minimally deviating from its actual (ideal) value.
     """
-    lower_quantile_pct: float = false_positive_rate / 2
-    upper_quantile_pct: float = 1.0 - false_positive_rate / 2
+    lower_quantile_pct: float = false_positive_rate / 2.0
+    upper_quantile_pct: float = 1.0 - false_positive_rate / 2.0
+
+    metric_values_original: np.ndarray = copy.deepcopy(metric_values)
+
+    datetime_detected: bool = is_ndarray_datetime_dtype(data=metric_values)
+    if datetime_detected:
+        metric_value: Any
+        metric_values = np.asarray(
+            [metric_value.timestamp() for metric_value in metric_values]
+        )
 
     sample_lower_quantile: np.ndarray = numpy_quantile(
         a=metric_values,
@@ -743,7 +774,9 @@ def compute_bootstrap_quantiles_point_estimate(
             metric_values, size=(n_resamples, metric_values.size)
         )
 
-    lower_quantile_bias_corrected_point_estimate: np.float64 = _determine_quantile_bias_corrected_point_estimate(
+    lower_quantile_bias_corrected_point_estimate: Union[
+        np.float64, datetime.datetime
+    ] = _determine_quantile_bias_corrected_point_estimate(
         bootstraps=bootstraps,
         quantile_pct=lower_quantile_pct,
         quantile_statistic_interpolation_method=quantile_statistic_interpolation_method,
@@ -751,8 +784,9 @@ def compute_bootstrap_quantiles_point_estimate(
         quantile_bias_std_error_ratio_threshold=quantile_bias_std_error_ratio_threshold,
         sample_quantile=sample_lower_quantile,
     )
-
-    upper_quantile_bias_corrected_point_estimate: np.float64 = _determine_quantile_bias_corrected_point_estimate(
+    upper_quantile_bias_corrected_point_estimate: Union[
+        np.float64, datetime.datetime
+    ] = _determine_quantile_bias_corrected_point_estimate(
         bootstraps=bootstraps,
         quantile_pct=upper_quantile_pct,
         quantile_statistic_interpolation_method=quantile_statistic_interpolation_method,
@@ -761,8 +795,16 @@ def compute_bootstrap_quantiles_point_estimate(
         sample_quantile=sample_upper_quantile,
     )
 
+    if datetime_detected:
+        lower_quantile_bias_corrected_point_estimate = datetime.datetime.fromtimestamp(
+            lower_quantile_bias_corrected_point_estimate
+        )
+        upper_quantile_bias_corrected_point_estimate = datetime.datetime.fromtimestamp(
+            upper_quantile_bias_corrected_point_estimate
+        )
+
     return build_numeric_range_estimation_result(
-        metric_values=metric_values,
+        metric_values=metric_values_original,
         min_value=lower_quantile_bias_corrected_point_estimate,
         max_value=upper_quantile_bias_corrected_point_estimate,
     )
@@ -823,6 +865,17 @@ def build_numeric_range_estimation_result(
     Returns:
         Structured "NumericRangeEstimationResult" object, containing histogram and value_range attributes.
     """
+    if is_ndarray_datetime_dtype(data=metric_values):
+        """
+        # TODO: <Alex>8/13/2022</Alex>
+        Until proper mechanism for computing histogram of datetime type valued 1-dimensional set of data points is
+        implemented, set "estimation_histogram" to "None" in cases when datetime is encountered in metric computations.
+        """
+        return NumericRangeEstimationResult(
+            estimation_histogram=None,
+            value_range=np.asarray([min_value, max_value]),
+        )
+
     histogram: Tuple[np.ndarray, np.ndarray] = np.histogram(
         a=metric_values, bins=NUM_HISTOGRAM_BINS
     )
