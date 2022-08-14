@@ -1,4 +1,5 @@
 import copy
+import datetime
 import itertools
 import logging
 import re
@@ -718,6 +719,15 @@ def compute_bootstrap_quantiles_point_estimate(
     lower_quantile_pct: float = false_positive_rate / 2.0
     upper_quantile_pct: float = 1.0 - false_positive_rate / 2.0
 
+    metric_values_original: np.ndarray = copy.deepcopy(metric_values)
+
+    datetime_detected: bool = is_ndarray_datetime_dtype(data=metric_values)
+    if datetime_detected:
+        metric_value: Any
+        metric_values = np.asarray(
+            [metric_value.timestamp() for metric_value in metric_values]
+        )
+
     sample_lower_quantile: np.ndarray = numpy_quantile(
         a=metric_values,
         q=lower_quantile_pct,
@@ -742,7 +752,9 @@ def compute_bootstrap_quantiles_point_estimate(
             metric_values, size=(n_resamples, metric_values.size)
         )
 
-    lower_quantile_bias_corrected_point_estimate: np.float64 = _determine_quantile_bias_corrected_point_estimate(
+    lower_quantile_bias_corrected_point_estimate: Union[
+        np.float64, datetime.datetime
+    ] = _determine_quantile_bias_corrected_point_estimate(
         bootstraps=bootstraps,
         quantile_pct=lower_quantile_pct,
         quantile_statistic_interpolation_method=quantile_statistic_interpolation_method,
@@ -750,7 +762,9 @@ def compute_bootstrap_quantiles_point_estimate(
         quantile_bias_std_error_ratio_threshold=quantile_bias_std_error_ratio_threshold,
         sample_quantile=sample_lower_quantile,
     )
-    upper_quantile_bias_corrected_point_estimate: np.float64 = _determine_quantile_bias_corrected_point_estimate(
+    upper_quantile_bias_corrected_point_estimate: Union[
+        np.float64, datetime.datetime
+    ] = _determine_quantile_bias_corrected_point_estimate(
         bootstraps=bootstraps,
         quantile_pct=upper_quantile_pct,
         quantile_statistic_interpolation_method=quantile_statistic_interpolation_method,
@@ -758,8 +772,17 @@ def compute_bootstrap_quantiles_point_estimate(
         quantile_bias_std_error_ratio_threshold=quantile_bias_std_error_ratio_threshold,
         sample_quantile=sample_upper_quantile,
     )
+
+    if datetime_detected:
+        lower_quantile_bias_corrected_point_estimate = datetime.datetime.fromtimestamp(
+            lower_quantile_bias_corrected_point_estimate
+        )
+        upper_quantile_bias_corrected_point_estimate = datetime.datetime.fromtimestamp(
+            upper_quantile_bias_corrected_point_estimate
+        )
+
     return build_numeric_range_estimation_result(
-        metric_values=metric_values,
+        metric_values=metric_values_original,
         min_value=lower_quantile_bias_corrected_point_estimate,
         max_value=upper_quantile_bias_corrected_point_estimate,
     )
