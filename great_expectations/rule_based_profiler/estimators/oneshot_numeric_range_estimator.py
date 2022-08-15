@@ -23,15 +23,12 @@ from great_expectations.types.attributes import Attributes
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-DEFAULT_QUANTILES_QUANTILE_STATISTIC_INTERPOLATION_METHOD = "nearest"
 
-
-class QuantilesNumericRangeEstimator(NumericRangeEstimator):
+class OneShotNumericRangeEstimator(NumericRangeEstimator):
     """
-    Implements "quantiles" computation.
+    Implements "oneshot" (one observation) computation.
 
-    This nonparameteric estimator calculates quantiles given a MetricValues vector of length N, the q-th quantile of
-        the vector is the value q of the way from the minimum to the maximum in a sorted copy of the MetricValues.
+    This parameteric estimator assumes a Normal distribution of data, and thus should be used for testing purposes only.
     """
 
     def __init__(
@@ -39,7 +36,7 @@ class QuantilesNumericRangeEstimator(NumericRangeEstimator):
         configuration: Optional[Attributes] = None,
     ) -> None:
         super().__init__(
-            name="quantiles",
+            name="oneshot",
             configuration=configuration,
         )
 
@@ -63,10 +60,6 @@ class QuantilesNumericRangeEstimator(NumericRangeEstimator):
             variables=variables,
             parameters=parameters,
         )
-        if quantile_statistic_interpolation_method is None:
-            quantile_statistic_interpolation_method = (
-                DEFAULT_QUANTILES_QUANTILE_STATISTIC_INTERPOLATION_METHOD
-            )
 
         return compute_quantiles(
             metric_values=metric_values,

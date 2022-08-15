@@ -8,13 +8,10 @@ import re
 import warnings
 from collections import OrderedDict
 from functools import lru_cache
-from typing import TYPE_CHECKING, Any, Optional
+from typing import Any, Optional
 from urllib.parse import urlparse
 
 from great_expectations.types import safe_deep_copy
-
-if TYPE_CHECKING:
-    from great_expectations.data_context.store import Store
 
 try:
     from azure.identity import DefaultAzureCredential
@@ -135,7 +132,7 @@ def build_store_from_config(
     store_config: Optional[dict] = None,
     module_name: str = "great_expectations.data_context.store",
     runtime_environment: Optional[dict] = None,
-) -> Optional["Store"]:
+) -> Optional["Store"]:  # noqa: F821
     if store_config is None or module_name is None:
         return None
 
@@ -596,7 +593,7 @@ class PasswordMasker:
         # be defensive, since it would be logical to expect this method works with DataContextConfig
         if not isinstance(config, dict):
             raise TypeError(
-                "PasswordMasker.sanitize_config expects param `config` "
+                f"PasswordMasker.sanitize_config expects param `config` "
                 + f"to be of type Dict, not of type {type(config)}"
             )
 

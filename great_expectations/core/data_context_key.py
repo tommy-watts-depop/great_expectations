@@ -10,18 +10,18 @@ class DataContextKey(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def to_tuple(self) -> tuple:
-        raise NotImplementedError
+    def to_tuple(self) -> None:
+        pass
 
     @classmethod
     def from_tuple(cls, tuple_):
         return cls(*tuple_)
 
-    def to_fixed_length_tuple(self) -> tuple:
+    def to_fixed_length_tuple(self) -> None:
         raise NotImplementedError
 
     @classmethod
-    def from_fixed_length_tuple(cls, tuple_) -> "DataContextKey":
+    def from_fixed_length_tuple(cls, tuple_) -> None:
         raise NotImplementedError
 
     def __eq__(self, other):

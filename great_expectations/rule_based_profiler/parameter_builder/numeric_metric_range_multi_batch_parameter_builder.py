@@ -25,8 +25,8 @@ from great_expectations.rule_based_profiler.estimators.numeric_range_estimation_
 from great_expectations.rule_based_profiler.estimators.numeric_range_estimator import (
     NumericRangeEstimator,
 )
-from great_expectations.rule_based_profiler.estimators.quantiles_numeric_range_estimator import (
-    QuantilesNumericRangeEstimator,
+from great_expectations.rule_based_profiler.estimators.oneshot_numeric_range_estimator import (
+    OneShotNumericRangeEstimator,
 )
 from great_expectations.rule_based_profiler.helpers.util import (
     NP_EPSILON,
@@ -63,19 +63,17 @@ class NumericMetricRangeMultiBatchParameterBuilder(MetricMultiBatchParameterBuil
     On the other hand, it is specific in the sense that the parameter names will always have the semantics of numeric
     ranges, which will incorporate the requirements, imposed by the configured false_positive_rate tolerances.
 
-    The implementation supports four methods of estimating parameter values from data:
-    * quantiles -- assumes that metric values, computed on batch data, are normally distributed and computes the mean
-      and the standard error using the queried batches as the single sample of the distribution.
-    * exact -- uses the minimum and maximum observations for range boundaries.
-    * bootstrap -- a statistical resampling technique (see "https://en.wikipedia.org/wiki/Bootstrapping_(statistics)").
-    * kde -- a statistical technique that fits a gaussian to the distribution and resamples from it.
+    The implementation supports two methods of estimating parameter values from data:
+    * bootstrapped (default) -- a statistical technique (see "https://en.wikipedia.org/wiki/Bootstrapping_(statistics)")
+    * one-shot -- assumes that metric values, computed on batch data, are normally distributed and computes the mean
+      and the standard error using the queried batches as the single sample of the distribution (fast, but inaccurate).
     """
 
     RECOGNIZED_SAMPLING_METHOD_NAMES: set = {
         "bootstrap",
         "exact",
         "kde",
-        "quantiles",
+        "oneshot",
     }
 
     RECOGNIZED_TRUNCATE_DISTRIBUTION_KEYS: set = {
@@ -126,7 +124,7 @@ class NumericMetricRangeMultiBatchParameterBuilder(MetricMultiBatchParameterBuil
             reduce_scalar_metric: if True (default), then reduces computation of 1-dimensional metric to scalar value.
             false_positive_rate: user-configured fraction between 0 and 1 expressing desired false positive rate for
                 identifying unexpected values as judged by the upper- and lower- quantiles of the observed metric data.
-            estimator: choice of the estimation algorithm: "quantiles", "bootstrap", "exact"
+            estimator: choice of the estimation algorithm: "oneshot" (one observation), "bootstrap" (default), "exact"
                 (deterministic, incorporating entire observed value range), or "kde" (kernel density estimation).
             n_resamples: Applicable only for the "bootstrap" and "kde" sampling methods -- if omitted (default), then
                 9999 is used (default in
@@ -421,8 +419,8 @@ detected.
 """
             )
 
-        if estimator == "quantiles":
-            return QuantilesNumericRangeEstimator(
+        if estimator == "oneshot":
+            return OneShotNumericRangeEstimator(
                 configuration=Attributes(
                     {
                         "false_positive_rate": self.false_positive_rate,

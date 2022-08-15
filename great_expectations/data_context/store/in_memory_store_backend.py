@@ -27,7 +27,7 @@ class InMemoryStoreBackend(StoreBackend):
             manually_initialize_store_backend_id=manually_initialize_store_backend_id,
             store_name=store_name,
         )
-        self._store: dict = {}
+        self._store = {}
         # Initialize with store_backend_id if not part of an HTMLSiteStore
         if not self._suppress_store_backend_id:
             _ = self.store_backend_id
@@ -71,7 +71,7 @@ class InMemoryStoreBackend(StoreBackend):
     def config(self) -> dict:
         return self._config
 
-    def build_key(  # type: ignore[override]
+    def build_key(
         self,
         resource_type: Optional[DataContextVariableSchema] = None,
         id_: Optional[str] = None,

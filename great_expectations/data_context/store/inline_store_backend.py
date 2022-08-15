@@ -1,6 +1,6 @@
 import logging
 import pathlib
-from typing import TYPE_CHECKING, Any, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 from great_expectations.core.data_context_key import DataContextVariableKey
 from great_expectations.core.yaml_handler import YAMLHandler
@@ -11,9 +11,6 @@ from great_expectations.data_context.store.store_backend import StoreBackend
 from great_expectations.data_context.types.base import DataContextConfig
 from great_expectations.exceptions.exceptions import StoreBackendError
 from great_expectations.util import filter_properties_dict
-
-if TYPE_CHECKING:
-    from great_expectations.data_context import DataContext
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +35,7 @@ class InlineStoreBackend(StoreBackend):
 
     def __init__(
         self,
-        data_context: "DataContext",
+        data_context: "DataContext",  # noqa: F821
         resource_type: DataContextVariableSchema,
         runtime_environment: Optional[dict] = None,
         fixed_length_key: bool = False,
@@ -188,7 +185,7 @@ class InlineStoreBackend(StoreBackend):
 
     def _save_changes(self) -> None:
         context = self._data_context
-        config_filepath = pathlib.Path(context.root_directory) / context.GE_YML  # type: ignore[arg-type]
+        config_filepath = pathlib.Path(context.root_directory) / context.GE_YML
 
         try:
             with open(config_filepath, "w") as outfile:

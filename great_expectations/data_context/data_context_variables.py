@@ -1,7 +1,7 @@
 import enum
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Optional
+from typing import Any, Optional
 
 from great_expectations.core.data_context_key import DataContextKey
 from great_expectations.data_context.types.base import (
@@ -16,10 +16,6 @@ from great_expectations.data_context.types.resource_identifiers import (
     GeCloudIdentifier,
 )
 from great_expectations.data_context.util import substitute_all_config_variables
-
-if TYPE_CHECKING:
-    from great_expectations.data_context import DataContext
-    from great_expectations.data_context.store import DataContextStore
 
 
 class DataContextVariableSchema(str, enum.Enum):
@@ -51,7 +47,7 @@ class DataContextVariableSchema(str, enum.Enum):
         return value in cls._value2member_map_
 
 
-@dataclass  # type: ignore[misc]
+@dataclass
 class DataContextVariables(ABC):
     """
     Wrapper object around data context variables set in the `great_expectations.yml` config file.
@@ -69,7 +65,7 @@ class DataContextVariables(ABC):
 
     config: DataContextConfig
     substitutions: Optional[dict] = None
-    _store: Optional["DataContextStore"] = None
+    _store: Optional["DataContextStore"] = None  # noqa: F821
 
     def __post_init__(self) -> None:
         if self.substitutions is None:
@@ -82,13 +78,13 @@ class DataContextVariables(ABC):
         return repr(self.config)
 
     @property
-    def store(self) -> "DataContextStore":
+    def store(self) -> "DataContextStore":  # noqa: F821
         if self._store is None:
             self._store = self._init_store()
         return self._store
 
     @abstractmethod
-    def _init_store(self) -> "DataContextStore":
+    def _init_store(self) -> "DataContextStore":  # noqa: F821
         raise NotImplementedError
 
     def get_key(self) -> DataContextKey:
@@ -114,7 +110,7 @@ class DataContextVariables(ABC):
         """
         Persist any changes made to variables utilizing the configured Store.
         """
-        key: ConfigurationIdentifier = self.get_key()  # type: ignore[assignment]
+        key: ConfigurationIdentifier = self.get_key()
         return self.store.set(key=key, value=self.config)
 
     @property
@@ -274,7 +270,7 @@ class DataContextVariables(ABC):
 
 @dataclass(repr=False)
 class EphemeralDataContextVariables(DataContextVariables):
-    def _init_store(self) -> "DataContextStore":
+    def _init_store(self) -> "DataContextStore":  # noqa: F821
         from great_expectations.data_context.store.data_context_store import (
             DataContextStore,
         )
@@ -289,7 +285,7 @@ class EphemeralDataContextVariables(DataContextVariables):
 
 @dataclass(repr=False)
 class FileDataContextVariables(DataContextVariables):
-    data_context: Optional["DataContext"] = None
+    data_context: Optional["DataContext"] = None  # noqa: F821
 
     def __post_init__(self) -> None:
         # Chetan - 20220607 - Although the above argument is not truly optional, we are
@@ -304,7 +300,7 @@ class FileDataContextVariables(DataContextVariables):
                 f"A reference to a data context is required for {self.__class__.__name__}"
             )
 
-    def _init_store(self) -> "DataContextStore":
+    def _init_store(self) -> "DataContextStore":  # noqa: F821
         from great_expectations.data_context.store.data_context_store import (
             DataContextStore,
         )
@@ -348,7 +344,7 @@ class CloudDataContextVariables(DataContextVariables):
                 f"All of the following attributes are required for{ self.__class__.__name__}:\n  self.ge_cloud_base_url\n  self.ge_cloud_organization_id\n  self.ge_cloud_access_token"
             )
 
-    def _init_store(self) -> "DataContextStore":
+    def _init_store(self) -> "DataContextStore":  # noqa: F821
         from great_expectations.data_context.store.data_context_store import (
             DataContextStore,
         )
