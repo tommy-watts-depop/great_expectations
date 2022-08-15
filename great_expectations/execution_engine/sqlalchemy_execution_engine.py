@@ -1150,8 +1150,8 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
             }
         )
 
-        source_schema_name: str = batch_spec.get("schema_name", None)
-        source_table_name: str = batch_spec.get("table_name", None)
+        schema_name: str = batch_spec.get("schema_name", None)
+        table_name: str = batch_spec.get("table_name", None)
 
         temp_table_schema_name: Optional[str] = batch_spec.get("temp_table_schema_name")
 
@@ -1169,6 +1169,10 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
             "create_temp_table", self._create_temp_table
         )
 
+        use_quoted_name: bool = batch_spec.get(
+            "use_quoted_name", False
+        )
+
         if isinstance(batch_spec, RuntimeQueryBatchSpec):
             # query != None is already checked when RuntimeQueryBatchSpec is instantiated
             query: str = batch_spec.query
@@ -1179,8 +1183,9 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
                 query=query,
                 temp_table_schema_name=temp_table_schema_name,
                 create_temp_table=create_temp_table,
-                source_table_name=source_table_name,
-                source_schema_name=source_schema_name,
+                table_name=table_name,
+                schema_name=schema_name,
+                use_quoted_name=use_quoted_name
             )
         elif isinstance(batch_spec, SqlAlchemyDatasourceBatchSpec):
             selectable: Union[Selectable, str] = self._build_selectable_from_batch_spec(
@@ -1190,8 +1195,8 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
                 execution_engine=self,
                 selectable=selectable,
                 create_temp_table=create_temp_table,
-                source_table_name=source_table_name,
-                source_schema_name=source_schema_name,
+                table_name=table_name,
+                schema_name=schema_name,
             )
 
         return batch_data, batch_markers
