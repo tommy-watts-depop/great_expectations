@@ -218,10 +218,20 @@ class ConfiguredAssetFilePathDataConnector(FilePathDataConnector):
             BatchSpec built from batch_definition
         """
 
+        print("hello")
+
         data_asset_name: str = batch_definition.data_asset_name
+        # there might need to be another way todo thi
+        print(
+            f"here is the type of asset that we have? {type(self.assets[data_asset_name].batch_spec_passthrough)}"
+        )
+        print(
+            f"here is the type of asset that we have? {self.assets[data_asset_name].batch_spec_passthrough}"
+        )
         if (
             data_asset_name in self.assets
             and self.assets[data_asset_name].batch_spec_passthrough
+            # batchspec passthrough might not be a dictionary... right? this is what we are checking
             and isinstance(self.assets[data_asset_name].batch_spec_passthrough, dict)
         ):
             # batch_spec_passthrough from data_asset
