@@ -535,7 +535,7 @@ class BasicSuiteBuilderProfiler(BasicDatasetProfilerBase):
                 )
 
     @classmethod
-    def _profile(cls, dataset, configuration=None):
+    def _profile(cls, dataset, configuration=None):  # noqa: C901 - 28
         logger.debug(f"Running profiler with configuration: {configuration}")
         if configuration == "demo":
             return cls._demo_profile(dataset)

@@ -168,6 +168,21 @@ def pytest_addoption(parser):
         help="If set, execute tests against trino",
     )
     parser.addoption(
+        "--redshift",
+        action="store_true",
+        help="If set, execute tests against redshift",
+    )
+    parser.addoption(
+        "--athena",
+        action="store_true",
+        help="If set, execute tests against athena",
+    )
+    parser.addoption(
+        "--snowflake",
+        action="store_true",
+        help="If set, execute tests against snowflake",
+    )
+    parser.addoption(
         "--aws-integration",
         action="store_true",
         help="If set, run aws integration tests for usage_statistics",
@@ -229,6 +244,9 @@ def build_test_backends_list_cfe(metafunc):
     include_aws: bool = metafunc.config.getoption("--aws")
     include_trino: bool = metafunc.config.getoption("--trino")
     include_azure: bool = metafunc.config.getoption("--azure")
+    include_redshift: bool = metafunc.config.getoption("--redshift")
+    include_athena: bool = metafunc.config.getoption("--athena")
+    include_snowflake: bool = metafunc.config.getoption("--snowflake")
     test_backend_names: List[str] = build_test_backends_list_v3(
         include_pandas=include_pandas,
         include_spark=include_spark,
@@ -240,6 +258,9 @@ def build_test_backends_list_cfe(metafunc):
         include_aws=include_aws,
         include_trino=include_trino,
         include_azure=include_azure,
+        include_redshift=include_redshift,
+        include_athena=include_athena,
+        include_snowflake=include_snowflake,
     )
     return test_backend_names
 
@@ -297,7 +318,17 @@ def sa(test_backends):
     if not any(
         [
             dbms in test_backends
-            for dbms in ["postgresql", "sqlite", "mysql", "mssql", "bigquery", "trino"]
+            for dbms in [
+                "postgresql",
+                "sqlite",
+                "mysql",
+                "mssql",
+                "bigquery",
+                "trino",
+                "redshift",
+                "athena",
+                "snowflake",
+            ]
         ]
     ):
         pytest.skip("No recognized sqlalchemy backend selected.")
@@ -337,7 +368,7 @@ def basic_spark_df_execution_engine(spark_session):
 
     conf: List[tuple] = spark_session.sparkContext.getConf().getAll()
     spark_config: Dict[str, str] = dict(conf)
-    execution_engine: SparkDFExecutionEngine = SparkDFExecutionEngine(
+    execution_engine = SparkDFExecutionEngine(
         spark_config=spark_config,
     )
     return execution_engine
@@ -733,7 +764,7 @@ def titanic_pandas_data_context_with_v013_datasource_with_checkpoints_v1_with_em
         str(os.path.join(context_path, "..", "data", "titanic", "Titanic_1912.csv")),
     )
 
-    context: DataContext = DataContext(context_root_dir=context_path)
+    context = DataContext(context_root_dir=context_path)
     assert context.root_directory == context_path
 
     datasource_config: str = f"""
@@ -980,7 +1011,7 @@ def titanic_pandas_data_context_with_v013_datasource_stats_enabled_with_checkpoi
     context: DataContext = titanic_pandas_data_context_with_v013_datasource_with_checkpoints_v1_with_empty_store_stats_enabled
 
     # add simple template config
-    simple_checkpoint_template_config: CheckpointConfig = CheckpointConfig(
+    simple_checkpoint_template_config = CheckpointConfig(
         name="my_simple_template_checkpoint",
         config_version=1,
         run_name_template="%Y-%M-foo-bar-template-$VAR",
@@ -1028,7 +1059,7 @@ def titanic_pandas_data_context_with_v013_datasource_stats_enabled_with_checkpoi
     )
 
     # add nested template configs
-    nested_checkpoint_template_config_1: CheckpointConfig = CheckpointConfig(
+    nested_checkpoint_template_config_1 = CheckpointConfig(
         name="my_nested_checkpoint_template_1",
         config_version=1,
         run_name_template="%Y-%M-foo-bar-template-$VAR",
@@ -1086,7 +1117,7 @@ def titanic_pandas_data_context_with_v013_datasource_stats_enabled_with_checkpoi
         value=nested_checkpoint_template_config_1,
     )
 
-    nested_checkpoint_template_config_2: CheckpointConfig = CheckpointConfig(
+    nested_checkpoint_template_config_2 = CheckpointConfig(
         name="my_nested_checkpoint_template_2",
         config_version=1,
         template_name="my_nested_checkpoint_template_1",
@@ -1136,7 +1167,7 @@ def titanic_pandas_data_context_with_v013_datasource_stats_enabled_with_checkpoi
         value=nested_checkpoint_template_config_2,
     )
 
-    nested_checkpoint_template_config_3: CheckpointConfig = CheckpointConfig(
+    nested_checkpoint_template_config_3 = CheckpointConfig(
         name="my_nested_checkpoint_template_3",
         config_version=1,
         template_name="my_nested_checkpoint_template_2",
@@ -1189,12 +1220,12 @@ def titanic_pandas_data_context_with_v013_datasource_stats_enabled_with_checkpoi
     )
 
     # add minimal SimpleCheckpoint
-    simple_checkpoint_config: CheckpointConfig = CheckpointConfig(
+    simple_checkpoint_config = CheckpointConfig(
         name="my_minimal_simple_checkpoint",
         class_name="SimpleCheckpoint",
         config_version=1,
     )
-    simple_checkpoint_config_key: ConfigurationIdentifier = ConfigurationIdentifier(
+    simple_checkpoint_config_key = ConfigurationIdentifier(
         configuration_key=simple_checkpoint_config.name
     )
     context.checkpoint_store.set(
@@ -1203,7 +1234,7 @@ def titanic_pandas_data_context_with_v013_datasource_stats_enabled_with_checkpoi
     )
 
     # add SimpleCheckpoint with slack webhook
-    simple_checkpoint_with_slack_webhook_config: CheckpointConfig = CheckpointConfig(
+    simple_checkpoint_with_slack_webhook_config = CheckpointConfig(
         name="my_simple_checkpoint_with_slack",
         class_name="SimpleCheckpoint",
         config_version=1,
@@ -1220,14 +1251,14 @@ def titanic_pandas_data_context_with_v013_datasource_stats_enabled_with_checkpoi
     )
 
     # add SimpleCheckpoint with slack webhook and notify_with
-    simple_checkpoint_with_slack_webhook_and_notify_with_all_config: CheckpointConfig = CheckpointConfig(
+    simple_checkpoint_with_slack_webhook_and_notify_with_all_config = CheckpointConfig(
         name="my_simple_checkpoint_with_slack_and_notify_with_all",
         class_name="SimpleCheckpoint",
         config_version=1,
         slack_webhook="https://hooks.slack.com/foo/bar",
         notify_with="all",
     )
-    simple_checkpoint_with_slack_webhook_and_notify_with_all_config_key: ConfigurationIdentifier = ConfigurationIdentifier(
+    simple_checkpoint_with_slack_webhook_and_notify_with_all_config_key = ConfigurationIdentifier(
         configuration_key=simple_checkpoint_with_slack_webhook_and_notify_with_all_config.name
     )
     context.checkpoint_store.set(
@@ -1236,7 +1267,7 @@ def titanic_pandas_data_context_with_v013_datasource_stats_enabled_with_checkpoi
     )
 
     # add SimpleCheckpoint with site_names
-    simple_checkpoint_with_site_names_config: CheckpointConfig = CheckpointConfig(
+    simple_checkpoint_with_site_names_config = CheckpointConfig(
         name="my_simple_checkpoint_with_site_names",
         class_name="SimpleCheckpoint",
         config_version=1,
@@ -2337,7 +2368,7 @@ stores:
     store_backend:
       class_name: GeCloudStoreBackend
       ge_cloud_base_url: {ge_cloud_base_url}
-      ge_cloud_resource_type: suite_validation_result
+      ge_cloud_resource_type: validation_result
       ge_cloud_credentials:
         access_token: {ge_cloud_access_token}
         organization_id: {ge_cloud_organization_id}
@@ -2348,7 +2379,7 @@ stores:
     store_backend:
       class_name: GeCloudStoreBackend
       ge_cloud_base_url: {ge_cloud_base_url}
-      ge_cloud_resource_type: contract
+      ge_cloud_resource_type: checkpoint
       ge_cloud_credentials:
         access_token: {ge_cloud_access_token}
         organization_id: {ge_cloud_organization_id}
@@ -2432,7 +2463,7 @@ def empty_data_context_in_cloud_mode(
         autospec=True,
         side_effect=mocked_get_ge_cloud_config,
     ):
-        context: DataContext = DataContext(
+        context = DataContext(
             ge_cloud_mode=True,
             context_root_dir=project_path_name,
         )
@@ -2632,9 +2663,7 @@ def populated_profiler_store(
     deserialized_config.pop("module_name")
     deserialized_config.pop("class_name")
 
-    profiler_config: RuleBasedProfilerConfig = RuleBasedProfilerConfig(
-        **deserialized_config
-    )
+    profiler_config = RuleBasedProfilerConfig(**deserialized_config)
 
     profiler_store = empty_profiler_store
     profiler_store.set(key=profiler_key, value=profiler_config)
@@ -2907,7 +2936,7 @@ def alice_columnar_table_single_batch(empty_data_context):
     )
 
     expectation_suite_name: str = "alice_columnar_table_single_batch"
-    expected_expectation_suite: ExpectationSuite = ExpectationSuite(
+    expected_expectation_suite = ExpectationSuite(
         expectation_suite_name=expectation_suite_name, data_context=empty_data_context
     )
     expectation_configuration: ExpectationConfiguration
@@ -3395,7 +3424,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
            alerts for when things change
         3. have a place to add his domain knowledge of the data (that can also be validated against new data)
         4. if all goes well, generalize some of the Profiler to use on his other tables
-    Bobby uses a crude, highly inaccurate deterministic parametric estimator -- for illustrative purposes.
+    Bobby uses a deterministic nonparametric estimator.
     Bobby configures his Profiler using the YAML configurations and data file locations captured in this fixture.
     """
     verbose_profiler_config_file_path: str = file_relative_path(
@@ -3411,7 +3440,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
     with open(verbose_profiler_config_file_path) as f:
         verbose_profiler_config = f.read()
 
-    my_row_count_range_rule_expectation_configurations_oneshot_estimator: List[
+    my_row_count_range_rule_expectation_configurations_quantiles_estimator: List[
         ExpectationConfiguration
     ] = [
         ExpectationConfiguration(
@@ -3433,7 +3462,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
         ),
     ]
 
-    my_column_ranges_rule_expectation_configurations_oneshot_estimator: List[
+    my_column_ranges_rule_expectation_configurations_quantiles_estimator: List[
         ExpectationConfiguration
     ] = [
         ExpectationConfiguration(
@@ -4146,7 +4175,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
         ),
     ]
 
-    my_column_timestamps_rule_expectation_configurations_oneshot_estimator: List[
+    my_column_timestamps_rule_expectation_configurations_quantiles_estimator: List[
         ExpectationConfiguration
     ] = [
         ExpectationConfiguration(
@@ -4199,7 +4228,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
         ),
     ]
 
-    my_column_regex_rule_expectation_configurations_oneshot_estimator: List[
+    my_column_regex_rule_expectation_configurations_quantiles_estimator: List[
         ExpectationConfiguration
     ] = [
         ExpectationConfiguration(
@@ -4316,33 +4345,33 @@ def bobby_columnar_table_multi_batch(empty_data_context):
     expectation_configurations: List[ExpectationConfiguration] = []
 
     expectation_configurations.extend(
-        my_row_count_range_rule_expectation_configurations_oneshot_estimator
+        my_row_count_range_rule_expectation_configurations_quantiles_estimator
     )
     expectation_configurations.extend(
-        my_column_ranges_rule_expectation_configurations_oneshot_estimator
+        my_column_ranges_rule_expectation_configurations_quantiles_estimator
     )
     expectation_configurations.extend(
-        my_column_timestamps_rule_expectation_configurations_oneshot_estimator
+        my_column_timestamps_rule_expectation_configurations_quantiles_estimator
     )
 
     expectation_configurations.extend(
-        my_column_regex_rule_expectation_configurations_oneshot_estimator
+        my_column_regex_rule_expectation_configurations_quantiles_estimator
     )
     expectation_configurations.extend(
         my_rule_for_very_few_cardinality_expectation_configurations
     )
-    expectation_suite_name_oneshot_estimator: str = (
-        "bobby_columnar_table_multi_batch_oneshot_estimator"
+    expectation_suite_name_quantiles_estimator: str = (
+        "bobby_columnar_table_multi_batch_quantiles_estimator"
     )
-    expected_expectation_suite_oneshot_estimator: ExpectationSuite = ExpectationSuite(
-        expectation_suite_name=expectation_suite_name_oneshot_estimator,
+    expected_expectation_suite_quantiles_estimator: ExpectationSuite = ExpectationSuite(
+        expectation_suite_name=expectation_suite_name_quantiles_estimator,
         data_context=empty_data_context,
     )
     expectation_configuration: ExpectationConfiguration
     for expectation_configuration in expectation_configurations:
         # NOTE Will 20211208 add_expectation() method, although being called by an ExpectationSuite instance, is being
         # called within a fixture, and we will prevent it from sending a usage_event by calling the private method.
-        expected_expectation_suite_oneshot_estimator._add_expectation(
+        expected_expectation_suite_quantiles_estimator._add_expectation(
             expectation_configuration=expectation_configuration, send_usage_event=False
         )
 
@@ -4350,7 +4379,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
         "name": "bobby user workflow",
         "config_version": 1.0,
         "variables": {
-            "estimator": "oneshot",
+            "estimator": "quantiles",
             "false_positive_rate": 0.01,
             "mostly": 1.0,
         },
@@ -4625,12 +4654,12 @@ def bobby_columnar_table_multi_batch(empty_data_context):
         },
     }
 
-    expected_expectation_suite_oneshot_estimator.add_citation(
+    expected_expectation_suite_quantiles_estimator.add_citation(
         comment="Created by Rule-Based Profiler with the configuration included.",
         profiler_config=expected_effective_profiler_config,
     )
 
-    expected_fixture_fully_qualified_parameter_names_by_domain_oneshot_estimator: Dict[
+    expected_fixture_fully_qualified_parameter_names_by_domain_quantiles_estimator: Dict[
         Domain, List[str]
     ] = {
         Domain(
@@ -5043,7 +5072,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
         ],
     }
 
-    expected_parameter_values_for_fully_qualified_parameter_names_by_domain_oneshot_estimator: Dict[
+    expected_parameter_values_for_fully_qualified_parameter_names_by_domain_quantiles_estimator: Dict[
         Domain, Dict[str, ParameterNode]
     ] = {
         Domain(
@@ -5053,7 +5082,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5095,7 +5124,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5161,7 +5190,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5227,7 +5256,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5293,7 +5322,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5359,7 +5388,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5425,7 +5454,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5491,7 +5520,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5557,7 +5586,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5623,7 +5652,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5689,7 +5718,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5755,7 +5784,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5821,7 +5850,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5887,7 +5916,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -5953,7 +5982,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6019,7 +6048,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6085,7 +6114,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6117,7 +6146,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6149,7 +6178,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6181,7 +6210,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6213,7 +6242,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6245,7 +6274,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6277,7 +6306,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6319,7 +6348,7 @@ def bobby_columnar_table_multi_batch(empty_data_context):
             }
         ): {
             "$variables": {
-                "estimator": "oneshot",
+                "estimator": "quantiles",
                 "false_positive_rate": 0.01,
                 "mostly": 1.0,
             },
@@ -6352,11 +6381,11 @@ def bobby_columnar_table_multi_batch(empty_data_context):
 
     return {
         "profiler_config": verbose_profiler_config,
-        "test_configuration_oneshot_estimator": {
-            "expectation_suite_name": expectation_suite_name_oneshot_estimator,
-            "expected_expectation_suite": expected_expectation_suite_oneshot_estimator,
-            "expected_fixture_fully_qualified_parameter_names_by_domain": expected_fixture_fully_qualified_parameter_names_by_domain_oneshot_estimator,
-            "expected_parameter_values_for_fully_qualified_parameter_names_by_domain": expected_parameter_values_for_fully_qualified_parameter_names_by_domain_oneshot_estimator,
+        "test_configuration_quantiles_estimator": {
+            "expectation_suite_name": expectation_suite_name_quantiles_estimator,
+            "expected_expectation_suite": expected_expectation_suite_quantiles_estimator,
+            "expected_fixture_fully_qualified_parameter_names_by_domain": expected_fixture_fully_qualified_parameter_names_by_domain_quantiles_estimator,
+            "expected_parameter_values_for_fully_qualified_parameter_names_by_domain": expected_parameter_values_for_fully_qualified_parameter_names_by_domain_quantiles_estimator,
         },
     }
 
@@ -6438,7 +6467,7 @@ def bobby_columnar_table_multi_batch_deterministic_data_context(
         ),
     )
 
-    context: DataContext = DataContext(context_root_dir=context_path)
+    context = DataContext(context_root_dir=context_path)
     assert context.root_directory == context_path
 
     return context
@@ -6515,7 +6544,7 @@ def bobby_columnar_table_multi_batch_probabilistic_data_context(
         ),
     )
 
-    context: DataContext = DataContext(context_root_dir=context_path)
+    context = DataContext(context_root_dir=context_path)
     assert context.root_directory == context_path
 
     return context
@@ -6676,7 +6705,7 @@ def bobster_columnar_table_multi_batch_normal_mean_5000_stdev_1000_data_context(
             path_or_buf=os.path.join(context_path, "..", "data", file_name), index=False
         )
 
-    context: DataContext = DataContext(context_root_dir=context_path)
+    context = DataContext(context_root_dir=context_path)
     assert context.root_directory == context_path
 
     return context
@@ -6835,7 +6864,7 @@ def quentin_columnar_table_multi_batch_data_context(
             os.path.join(context_path, "..", "data", file_name),
         )
 
-    context: DataContext = DataContext(context_root_dir=context_path)
+    context = DataContext(context_root_dir=context_path)
     assert context.root_directory == context_path
 
     return context

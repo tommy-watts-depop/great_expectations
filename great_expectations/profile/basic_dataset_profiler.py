@@ -124,7 +124,7 @@ class BasicDatasetProfiler(BasicDatasetProfilerBase):
     """
 
     @classmethod
-    def _profile(cls, dataset, configuration=None):
+    def _profile(cls, dataset, configuration=None):  # noqa: C901 - 18
         df = dataset
 
         df.set_default_expectation_argument("catch_exceptions", True)
@@ -264,8 +264,8 @@ class BasicDatasetProfiler(BasicDatasetProfilerBase):
 
             elif type_ == ProfilerDataType.STRING:
                 # Check for leading and trailing whitespace.
-                #!!! It would be nice to build additional Expectations here, but
-                #!!! the default logic for remove_expectations prevents us.
+                # !!! It would be nice to build additional Expectations here, but
+                # !!! the default logic for remove_expectations prevents us.
                 df.expect_column_values_to_not_match_regex(column, r"^\s+|\s+$")
 
                 if cardinality == ProfilerCardinality.UNIQUE:
