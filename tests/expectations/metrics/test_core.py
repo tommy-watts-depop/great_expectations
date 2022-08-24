@@ -1044,6 +1044,7 @@ def test_column_partition_metric_spark(spark_session):
     from great_expectations.expectations.metrics.import_manager import sparktypes
 
     week_idx: int
+    # how does it accept these parameters?
     engine: SparkDFExecutionEngine = build_spark_engine(
         spark=spark_session,
         df=pd.DataFrame(

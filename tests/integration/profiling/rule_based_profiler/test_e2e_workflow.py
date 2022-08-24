@@ -91,22 +91,10 @@ def test_spark_example(empty_data_context):
                     "yellow_tripdata_2019": {
                         "group_names": ["year", "month"],
                         "pattern": "yellow_tripdata_sample_(2019)-(\\d.*)\\.csv",
-                        "batch_spec_passthrough": {
-                            "reader_method": "csv",
-                            "reader_options": {
-                                "schema": schema,
-                            },
-                        },
                     },
                     "yellow_tripdata_2020": {
                         "group_names": ["year", "month"],
                         "pattern": "yellow_tripdata_sample_(2020)-(\\d.*)\\.csv",
-                        "batch_spec_passthrough": {
-                            "reader_method": "csv",
-                            "reader_options": {
-                                "schema": schema,
-                            },
-                        },
                     },
                 },
             },
@@ -124,6 +112,13 @@ def test_spark_example(empty_data_context):
         datasource_name="taxi_data",
         data_connector_name="configured_data_connector_multi_batch_asset",
         data_asset_name="yellow_tripdata_2019",
+        batch_spec_passthrough={
+            "reader_method": "csv",
+            "reader_options": {
+                "header": True,
+                "schema": schema,
+            },
+        },
     )
     data_context
     batch_list = data_context.get_batch_list(batch_request=multi_batch_batch_request)

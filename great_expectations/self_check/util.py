@@ -1699,7 +1699,7 @@ def build_spark_engine(
             schema = df.columns.tolist()
         else:
             data = df
-
+        # this is where we are doing the schema loading
         df = spark.createDataFrame(data=data, schema=schema)
 
     conf: Iterable[Tuple[str, str]] = spark.sparkContext.getConf().getAll()

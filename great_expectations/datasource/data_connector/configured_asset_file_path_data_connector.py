@@ -228,16 +228,33 @@ class ConfiguredAssetFilePathDataConnector(FilePathDataConnector):
         print(
             f"here is the type of asset that we have? {self.assets[data_asset_name].batch_spec_passthrough}"
         )
+        if "schema" in self.assets[data_asset_name].batch_spec_passthrough:
+            print("THIS WORKS!")
+
+            """"
+            sparktypes.StructType(
+            [
+                sparktypes.StructField("a", sparktypes.IntegerType(), True),
+                sparktypes.StructField("b", sparktypes.TimestampType(), True),
+            ]
+        ),"""
         if (
             data_asset_name in self.assets
             and self.assets[data_asset_name].batch_spec_passthrough
             # batchspec passthrough might not be a dictionary... right? this is what we are checking
             and isinstance(self.assets[data_asset_name].batch_spec_passthrough, dict)
         ):
+            print("check me")
             # batch_spec_passthrough from data_asset
-            batch_spec_passthrough = deepcopy(
-                self.assets[data_asset_name]["batch_spec_passthrough"]
-            )
+            if isinstance(self.assets[data_asset_name], Asset):
+                batch_spec_passthrough = deepcopy(
+                    self.assets[data_asset_name].batch_spec_passthrough
+                )
+            else:
+                batch_spec_passthrough = deepcopy(
+                    self.assets[data_asset_name]["batch_spec_passthrough"]
+                )
+
             batch_definition_batch_spec_passthrough = (
                 deepcopy(batch_definition.batch_spec_passthrough) or {}
             )

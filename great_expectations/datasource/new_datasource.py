@@ -189,6 +189,8 @@ class BaseDatasource:
                 batch_definition.batch_spec_passthrough = (
                     batch_request.batch_spec_passthrough
                 )
+                print("I thought this was supposed to be working")
+                print(batch_definition.batch_spec_passthrough)
                 batch_data: Any
                 batch_spec: PathBatchSpec
                 batch_markers: BatchMarkers
@@ -199,6 +201,8 @@ class BaseDatasource:
                 ) = data_connector.get_batch_data_and_metadata(
                     batch_definition=batch_definition
                 )
+                # is it good here?
+                # we are good here
                 new_batch = Batch(
                     data=batch_data,
                     batch_request=batch_request,
@@ -207,6 +211,8 @@ class BaseDatasource:
                     batch_markers=batch_markers,
                 )
                 batches.append(new_batch)
+
+            print("checkagain")
             return batches
 
     def _build_data_connector_from_config(

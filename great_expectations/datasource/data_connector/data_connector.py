@@ -112,7 +112,11 @@ class DataConnector:
         batch_data, batch_markers = self._execution_engine.get_batch_data_and_markers(
             batch_spec=batch_spec
         )
+        # MARKER
+        # here we have the right format
+        # and then
         self._execution_engine.load_batch_data(batch_definition.id, batch_data)
+        print("hello")
         return (
             batch_data,
             batch_spec,
@@ -135,6 +139,7 @@ class DataConnector:
             )
         )
         # batch_spec_passthrough via Data Connector config
+        # does this exist somewhere else?
         batch_spec_passthrough: dict = deepcopy(self.batch_spec_passthrough)
 
         # batch_spec_passthrough from batch_definition supersedes batch_spec_passthrough from Data Connector config

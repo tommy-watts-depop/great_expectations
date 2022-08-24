@@ -220,6 +220,7 @@ class SparkDFExecutionEngine(ExecutionEngine):
             )
         super().load_batch_data(batch_id=batch_id, batch_data=batch_data)
 
+    # this is where we want to eventually be, but we dont get down this far
     def get_batch_data_and_markers(
         self, batch_spec: BatchSpec
     ) -> Tuple[Any, BatchMarkers]:  # batch_data
@@ -284,9 +285,20 @@ Please check your config."""
         elif isinstance(batch_spec, PathBatchSpec):
             reader_method: str = batch_spec.reader_method
             reader_options: dict = batch_spec.reader_options or {}
+
+            schema: Optional[pyspark.sql.types.StructType] = reader_options.get(
+                "schema"
+            )
+
             path: str = batch_spec.path
             try:
-                reader: DataFrameReader = self.spark.read.options(**reader_options)
+                if schema:
+                    reader: DataFrameReader = self.spark.read.schema(schema).options(
+                        **reader_options
+                    )
+                else:
+                    reader: DataFrameReader = self.spark.read.options(**reader_options)
+
                 reader_fn: Callable = self._get_reader_fn(
                     reader=reader,
                     reader_method=reader_method,
@@ -314,7 +326,6 @@ Please check your config."""
 
         batch_data = self._apply_splitting_and_sampling_methods(batch_spec, batch_data)
         typed_batch_data = SparkDFBatchData(execution_engine=self, dataframe=batch_data)
-
         return typed_batch_data, batch_markers
 
     def _apply_splitting_and_sampling_methods(self, batch_spec, batch_data):
