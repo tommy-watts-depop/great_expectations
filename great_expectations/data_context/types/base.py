@@ -559,6 +559,7 @@ class DataConnectorConfigSchema(AbstractConfigSchema):
         cls_or_instance=fields.Str(), required=False, allow_none=True
     )
     skip_inapplicable_tables = fields.Boolean(required=False, allow_none=True)
+    introspection_directives = fields.Dict(required=False, allow_none=True)
     batch_spec_passthrough = fields.Dict(required=False, allow_none=True)
 
     # noinspection PyUnusedLocal
@@ -711,6 +712,7 @@ data connector. You must only select one between `filename` (from_service_accoun
             or "excluded_tables" in data
             or "included_tables" in data
             or "skip_inapplicable_tables" in data
+            or "introspection_directives" in data
         ) and not (
             data["class_name"]
             in [
