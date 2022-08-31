@@ -7,6 +7,7 @@ from collections import OrderedDict
 import pandas as pd
 import pytest
 from freezegun import freeze_time
+from great_expectations.validator.validator import Validator
 from ruamel.yaml import YAML
 
 import great_expectations as ge
@@ -14,7 +15,7 @@ import great_expectations.exceptions as ge_exceptions
 from great_expectations.checkpoint import Checkpoint, SimpleCheckpoint
 from great_expectations.checkpoint.types.checkpoint_result import CheckpointResult
 from great_expectations.core import ExpectationConfiguration, expectationSuiteSchema
-from great_expectations.core.batch import RuntimeBatchRequest
+from great_expectations.core.batch import RuntimeBatchRequest, Batch
 from great_expectations.core.config_peer import ConfigOutputModes
 from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.core.run_identifier import RunIdentifier
@@ -1882,25 +1883,44 @@ data_connectors:
     )
     assert my_validator.expectation_suite_name == "A_expectation_suite"
 
+class DummyExecutionEngine:
+    def load_batch_data(self, batch_id, batch_data):
+        return
+
+class DummyDataContext:
+    progress_bars = []
+
+
+class DummyBatchList:
+    def __iter__(self):
+        return iter([Batch(data=["foo"])])
 
 @pytest.mark.slow  # 8.13s
 def test_get_validator_without_expectation_suite(in_memory_runtime_context):
-    context = in_memory_runtime_context
+    # context = in_memory_runtime_context
+    #
+    # batch = context.get_batch_list(
+    #     batch_request=RuntimeBatchRequest(
+    #         datasource_name="pandas_datasource",
+    #         data_connector_name="runtime_data_connector",
+    #         data_asset_name="my_data_asset",
+    #         runtime_parameters={"batch_data": pd.DataFrame({"x": range(10)})},
+    #         batch_identifiers={
+    #             "id_key_0": "id_0_value_a",
+    #             "id_key_1": "id_1_value_a",
+    #         },
+    #     )
+    # )[0]
 
-    batch = context.get_batch_list(
-        batch_request=RuntimeBatchRequest(
-            datasource_name="pandas_datasource",
-            data_connector_name="runtime_data_connector",
-            data_asset_name="my_data_asset",
-            runtime_parameters={"batch_data": pd.DataFrame({"x": range(10)})},
-            batch_identifiers={
-                "id_key_0": "id_0_value_a",
-                "id_key_1": "id_1_value_a",
-            },
-        )
-    )[0]
-
-    my_validator = context.get_validator(batch=batch)
+    # my_validator = context.get_validator(batch=batch)
+    my_validator = Validator(
+        execution_engine=DummyExecutionEngine(),  # TODO: Stub
+        interactive_evaluation=True,
+        expectation_suite=None,  # None since we want to see the default
+        data_context=DummyDataContext(),  # TODO: Stub
+        batches=DummyBatchList(),  # TODO: Stub
+        include_rendered_content=True, #
+    )
     assert isinstance(my_validator.get_expectation_suite(), ExpectationSuite)
     assert my_validator.expectation_suite_name == "default"
 
