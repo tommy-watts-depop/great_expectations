@@ -570,8 +570,7 @@ def get_dataset(
                     type_ = np.dtype(value)
                 except TypeError:
                     # noinspection PyUnresolvedReferences
-                    type_ = getattr(pd.core.dtypes.dtypes, value)
-                    # If this raises AttributeError it's okay: it means someone built a bad test
+                    type_ = getattr(pd, value)()
                 pandas_schema[key] = type_
             # pandas_schema = {key: np.dtype(value) for (key, value) in schemas["pandas"].items()}
             df = df.astype(pandas_schema)
@@ -1233,8 +1232,7 @@ def get_test_validator_with_data(
                     type_ = np.dtype(value)
                 except TypeError:
                     # noinspection PyUnresolvedReferences
-                    type_ = getattr(pd.core.dtypes.dtypes, value)
-                    # If this raises AttributeError it's okay: it means someone built a bad test
+                    type_ = getattr(pd, value)()
                 pandas_schema[key] = type_
             # pandas_schema = {key: np.dtype(value) for (key, value) in schemas["pandas"].items()}
             df = df.astype(pandas_schema)
@@ -1632,6 +1630,7 @@ def build_sa_engine(
     df: pd.DataFrame,
     sa: ModuleType,
     schema: Optional[str] = None,
+    batch_id: Optional[str] = None,
     if_exists: str = "fail",
     index: bool = False,
     dtype: Optional[dict] = None,
@@ -1657,8 +1656,11 @@ def build_sa_engine(
     )
     batch = Batch(data=batch_data)
 
+    if batch_id is None:
+        batch_id = batch.id
+
     execution_engine = SqlAlchemyExecutionEngine(
-        engine=sqlalchemy_engine, batch_data_dict={batch.id: batch_data}
+        engine=sqlalchemy_engine, batch_data_dict={batch_id: batch_data}
     )
 
     return execution_engine
@@ -2184,6 +2186,8 @@ def generate_expectation_tests(
     test_data_cases: List[ExpectationTestDataCases],
     execution_engine_diagnostics: ExpectationExecutionEngineDiagnostics,
     raise_exceptions_for_backends: bool = False,
+    ignore_suppress: bool = False,
+    ignore_only_for: bool = False,
     debug_logger: Optional[logging.Logger] = None,
     only_consider_these_backends: Optional[List[str]] = None,
 ):
@@ -2192,6 +2196,11 @@ def generate_expectation_tests(
     :param expectation_type: snake_case name of the expectation type
     :param test_data_cases: list of ExpectationTestDataCases that has data, tests, schemas, and backends to use
     :param execution_engine_diagnostics: ExpectationExecutionEngineDiagnostics object specifying the engines the expectation is implemented for
+    :param raise_exceptions_for_backends: bool object that when True will raise an Exception if a backend fails to connect
+    :param ignore_suppress: bool object that when True will ignore the suppress_test_for list on Expectation sample tests
+    :param ignore_only_for: bool object that when True will ignore the only_for list on Expectation sample tests
+    :param debug_logger: optional logging.Logger object to use for sending debug messages to
+    :param only_consider_these_backends: optional list of backends to consider
     :return: list of parametrized tests with loaded validators and accessible backends
     """
     _debug = lambda x: x
@@ -2458,6 +2467,8 @@ def generate_expectation_tests(
                 if not should_we_generate_this_test(
                     backend=c,
                     expectation_test_case=test,
+                    ignore_suppress=ignore_suppress,
+                    ignore_only_for=ignore_only_for,
                     extra_debug_info=expectation_type,
                     debug_logger=debug_logger,
                 ):
@@ -2489,6 +2500,8 @@ def generate_expectation_tests(
 def should_we_generate_this_test(
     backend: str,
     expectation_test_case: ExpectationTestCase,
+    ignore_suppress: bool = False,
+    ignore_only_for: bool = False,
     extra_debug_info: str = "",
     debug_logger: Optional[logging.Logger] = None,
 ):
@@ -2505,18 +2518,30 @@ def should_we_generate_this_test(
     #   - only_for can be any of: pandas, pandas_022, pandas_023, pandas>=024
     #   - See: https://github.com/great-expectations/great_expectations/blob/7766bb5caa4e0e5b22fa3b3a5e1f2ac18922fdeb/tests/test_definitions/test_expectations_cfe.py#L176-L185
     if backend in expectation_test_case.suppress_test_for:
-        _debug(
-            f"Backend {backend} is suppressed for test {expectation_test_case.title}: | {extra_debug_info}"
-        )
-        return False
+        if ignore_suppress:
+            _debug(
+                f"Should be suppressing {expectation_test_case.title} for {backend}, but ignore_suppress is True | {extra_debug_info}"
+            )
+            return True
+        else:
+            _debug(
+                f"Backend {backend} is suppressed for test {expectation_test_case.title}: | {extra_debug_info}"
+            )
+            return False
     if (
         "sqlalchemy" in expectation_test_case.suppress_test_for
         and backend in SQL_DIALECT_NAMES
     ):
-        _debug(
-            f"All sqlalchemy (including {backend}) is suppressed for test: {expectation_test_case.title} | {extra_debug_info}"
-        )
-        return False
+        if ignore_suppress:
+            _debug(
+                f"Should be suppressing {expectation_test_case.title} for sqlalchemy (including {backend}), but ignore_suppress is True | {extra_debug_info}"
+            )
+            return True
+        else:
+            _debug(
+                f"All sqlalchemy (including {backend}) is suppressed for test: {expectation_test_case.title} | {extra_debug_info}"
+            )
+            return False
     if expectation_test_case.only_for != None and expectation_test_case.only_for:
         if not backend in expectation_test_case.only_for:
             if (
@@ -2535,10 +2560,17 @@ def should_we_generate_this_test(
                 elif "pandas>=024" in expectation_test_case.only_for:
                     if (major == "0" and int(minor) >= 24) or int(major) >= 1:
                         return True
-            _debug(
-                f"Only {expectation_test_case.only_for} allowed (not {backend}) for test: {expectation_test_case.title} | {extra_debug_info}"
-            )
-            return False
+
+            if ignore_only_for:
+                _debug(
+                    f"Should normally not run test {expectation_test_case.title} for {backend}, but ignore_only_for is True | {extra_debug_info}"
+                )
+                return True
+            else:
+                _debug(
+                    f"Only {expectation_test_case.only_for} allowed (not {backend}) for test: {expectation_test_case.title} | {extra_debug_info}"
+                )
+                return False
 
     return True
 
@@ -2889,13 +2921,16 @@ def check_json_test_result(test, result, data_asset=None) -> None:
                         + str(result["result"]["unexpected_list"])
                     )
                 except AssertionError as e:
-                    if type(result["result"]["unexpected_list"][0]) == list:
-                        unexpected_list_tup = [
-                            tuple(x) for x in result["result"]["unexpected_list"]
-                        ]
-                        assert (
-                            unexpected_list_tup == value
-                        ), f"{unexpected_list_tup} != {value}"
+                    if result["result"]["unexpected_list"]:
+                        if type(result["result"]["unexpected_list"][0]) == list:
+                            unexpected_list_tup = [
+                                tuple(x) for x in result["result"]["unexpected_list"]
+                            ]
+                            assert (
+                                unexpected_list_tup == value
+                            ), f"{unexpected_list_tup} != {value}"
+                        else:
+                            raise
                     else:
                         raise
 

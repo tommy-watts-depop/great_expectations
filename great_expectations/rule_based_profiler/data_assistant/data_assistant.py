@@ -132,6 +132,7 @@ class DataAssistant(metaclass=MetaDataAssistant):
                 metric_name=metric_name,
                 metric_domain_kwargs=DOMAIN_KWARGS_PARAMETER_FULLY_QUALIFIED_NAME,
                 metric_value_kwargs=None,
+                single_batch_mode=False,
                 enforce_numeric_metric=False,
                 replace_nan_with_zero=False,
                 reduce_scalar_metric=True,
@@ -291,6 +292,7 @@ class DataAssistant(metaclass=MetaDataAssistant):
                 metric_name=metric_name,
                 metric_domain_kwargs=metric_domain_kwargs,
                 metric_value_kwargs=metric_value_kwargs,
+                single_batch_mode=False,
                 enforce_numeric_metric=True,
                 replace_nan_with_zero=True,
                 reduce_scalar_metric=True,
@@ -464,7 +466,6 @@ class DataAssistant(metaclass=MetaDataAssistant):
 
         data_assistant_result = DataAssistantResult(
             _batch_id_to_batch_identifier_display_name_map=self._batch_id_to_batch_identifier_display_name_map(),
-            execution_time=0.0,
             _usage_statistics_handler=usage_statistics_handler,
         )
         run_profiler_on_data(
@@ -613,7 +614,7 @@ class DataAssistant(metaclass=MetaDataAssistant):
 
 @measure_execution_time(
     execution_time_holder_object_reference_name="data_assistant_result",
-    execution_time_property_name="execution_time",
+    execution_time_property_name="profiler_execution_time",
     pretty_print=False,
 )
 def run_profiler_on_data(
@@ -668,7 +669,9 @@ configuration included.
     )
     result: DataAssistantResult = data_assistant_result
     result.profiler_config = profiler.config
-    result.profiler_execution_time = rule_based_profiler_result.execution_time
+    result.rule_domain_builder_execution_time = (
+        rule_based_profiler_result.rule_domain_builder_execution_time
+    )
     result.rule_execution_time = rule_based_profiler_result.rule_execution_time
     result.metrics_by_domain = data_assistant.get_metrics_by_domain()
     result.expectation_configurations = (
@@ -678,6 +681,7 @@ configuration included.
 
 
 def build_map_metric_rule(
+    data_assistant_class_name: str,
     rule_name: str,
     expectation_type: str,
     map_metric_name: str,
@@ -724,17 +728,40 @@ def build_map_metric_rule(
         )
     )
 
-    # Step-2: Declare "ParameterBuilder" for every metric of interest.
+    # Step-2: Declare "ParameterBuilder" for every relevant metric of interest.
 
-    column_values_unique_unexpected_count_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
-        DataAssistant.commonly_used_parameter_builders.get_column_values_unique_unexpected_count_metric_multi_batch_parameter_builder()
-    )
-    column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
-        DataAssistant.commonly_used_parameter_builders.get_column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder()
-    )
-    column_values_null_unexpected_count_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
-        DataAssistant.commonly_used_parameter_builders.get_column_values_null_unexpected_count_metric_multi_batch_parameter_builder()
-    )
+    parameter_builders: List[ParameterBuilder] = []
+
+    column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_evaluations: Optional[
+        ParameterBuilder
+    ] = None
+
+    if map_metric_name == "column_values.unique":
+        column_values_unique_unexpected_count_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
+            DataAssistant.commonly_used_parameter_builders.get_column_values_unique_unexpected_count_metric_multi_batch_parameter_builder()
+        )
+        parameter_builders.append(
+            column_values_unique_unexpected_count_metric_multi_batch_parameter_builder_for_metrics
+        )
+    elif map_metric_name == "column_values.null":
+        column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
+            DataAssistant.commonly_used_parameter_builders.get_column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder()
+        )
+        column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_evaluations = column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_metrics
+        parameter_builders.append(
+            column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_metrics
+        )
+    elif map_metric_name == "column_values.nonnull":
+        column_values_null_unexpected_count_metric_multi_batch_parameter_builder_for_metrics: ParameterBuilder = (
+            DataAssistant.commonly_used_parameter_builders.get_column_values_null_unexpected_count_metric_multi_batch_parameter_builder()
+        )
+        parameter_builders.append(
+            column_values_null_unexpected_count_metric_multi_batch_parameter_builder_for_metrics
+        )
+    else:
+        raise ValueError(
+            f"""Metric "{map_metric_name}" is not supported as part of "{data_assistant_class_name}" implementation."""
+        )
 
     # Step-3: Set up "MeanUnexpectedMapMetricMultiBatchParameterBuilder" to compute "condition" for emitting "ExpectationConfiguration" (based on "Domain" data).
 
@@ -743,9 +770,14 @@ def build_map_metric_rule(
             DataAssistant.commonly_used_parameter_builders.get_table_row_count_metric_multi_batch_parameter_builder()
         )
 
-    column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_evaluations: ParameterBuilder = (
-        DataAssistant.commonly_used_parameter_builders.get_column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder()
-    )
+    if (
+        column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_evaluations
+        is None
+    ):
+        column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_evaluations = (
+            DataAssistant.commonly_used_parameter_builders.get_column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder()
+        )
+
     evaluation_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = [
         ParameterBuilderConfig(
             **total_count_metric_multi_batch_parameter_builder_for_evaluations.to_json_dict()
@@ -788,11 +820,6 @@ def build_map_metric_rule(
         "success_ratio": 7.5e-1,
     }
 
-    parameter_builders: List[ParameterBuilder] = [
-        column_values_unique_unexpected_count_metric_multi_batch_parameter_builder_for_metrics,
-        column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_metrics,
-        column_values_null_unexpected_count_metric_multi_batch_parameter_builder_for_metrics,
-    ]
     expectation_configuration_builders: List[ExpectationConfigurationBuilder] = [
         expect_column_values_to_be_attribute_expectation_configuration_builder,
     ]

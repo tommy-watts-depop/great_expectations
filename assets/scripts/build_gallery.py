@@ -142,9 +142,13 @@ def get_expectation_file_info_dict(
             if match:
                 if not line.strip().startswith("#"):
                     exp_type_set.add(match.group(1))
-        result[name]["exp_type"] = sorted(exp_type_set)[0]
+        if file_path.startswith("great_expectations"):
+            _prefix = "Core "
+        else:
+            _prefix = "Contrib "
+        result[name]["exp_type"] = _prefix + sorted(exp_type_set)[0]
         logger.debug(
-            f"Expectation type {sorted(exp_type_set)[0]} for {name} in {file_path}"
+            f"Expectation type {_prefix}{sorted(exp_type_set)[0]} for {name} in {file_path}"
         )
 
     os.chdir(oldpwd)
@@ -197,6 +201,8 @@ def get_contrib_requirements(filepath: str) -> Dict:
 def build_gallery(
     include_core: bool = True,
     include_contrib: bool = True,
+    ignore_suppress: bool = False,
+    ignore_only_for: bool = False,
     only_these_expectations: List[str] = [],
     only_consider_these_backends: List[str] = [],
 ) -> Dict:
@@ -281,6 +287,12 @@ def build_gallery(
         logger.info("Done finding contrib modules")
 
     for expectation in sorted(requirements_dict):
+        # Temp
+        if expectation in [
+            "expect_column_kl_divergence_to_be_less_than",  # Infinity values break JSON
+            "expect_column_values_to_be_valid_arn",  # Contrib Expectation where pretty much no test passes on any backend
+        ]:
+            continue
         group = requirements_dict[expectation]["group"]
         print(f"\n\n\n=== {expectation} ({group}) ===")
         requirements = requirements_dict[expectation].get("requirements", [])
@@ -319,11 +331,13 @@ def build_gallery(
                 continue
 
         logger.debug(f"Running diagnostics for expectation: {expectation}")
-        impl = great_expectations.expectations.registry.get_expectation_impl(
-            expectation
-        )
         try:
+            impl = great_expectations.expectations.registry.get_expectation_impl(
+                expectation
+            )
             diagnostics = impl().run_diagnostics(
+                ignore_suppress=ignore_suppress,
+                ignore_only_for=ignore_only_for,
                 debug_logger=logger,
                 only_consider_these_backends=only_consider_these_backends,
             )
@@ -533,6 +547,22 @@ def format_docstring_to_markdown(docstr: str) -> str:
     help="Do not include contrib/package Expectations",
 )
 @click.option(
+    "--ignore-suppress",
+    "-S",
+    "ignore_suppress",
+    is_flag=True,
+    default=False,
+    help="Ignore the suppress_test_for list on Expectation sample tests",
+)
+@click.option(
+    "--ignore-only-for",
+    "-O",
+    "ignore_only_for",
+    is_flag=True,
+    default=False,
+    help="Ignore the only_for list on Expectation sample tests",
+)
+@click.option(
     "--outfile-name",
     "-o",
     "outfile_name",
@@ -557,6 +587,8 @@ def main(**kwargs):
     gallery_info = build_gallery(
         include_core=not kwargs["no_core"],
         include_contrib=not kwargs["no_contrib"],
+        ignore_suppress=kwargs["ignore_suppress"],
+        ignore_only_for=kwargs["ignore_only_for"],
         only_these_expectations=kwargs["args"],
         only_consider_these_backends=backends,
     )
