@@ -235,7 +235,7 @@ stages:
               PYTEST="docker run -e GE_CLOUD_ORGANIZATION_ID=$(GE_CLOUD_ORGANIZATION_ID) "
               PYTEST+="-e GE_CLOUD_ACCESS_TOKEN=$(GE_CLOUD_ACCESS_TOKEN) -e GE_CLOUD_BASE_URL=$(GE_CLOUD_BASE_URL) "
               PYTEST+="greatexpectations/test:${DOCKER_TAG} "
-              PYTEST+="pytest tests --cloud -m \"cloud and e2e\""
+              PYTEST+="pytest tests --random-order --cloud -m \"cloud and e2e\""
               echo ${PYTEST}
               eval ${PYTEST}
             env:
@@ -277,7 +277,7 @@ stages:
               PYTEST+="greatexpectations/test:${DOCKER_TAG} /bin/bash -c \""
               PYTEST+="mysql --host=localhost --protocol=TCP --port=3306 --user=root --password='' --reconnect < /script/mysql_setup.sql && "
               # The last \" closes the quote from bash -c \".
-              PYTEST+="pytest --mysql --ignore=tests/cli --ignore=tests/integration/usage_statistics\""
+              PYTEST+="pytest --mysql --random-order --ignore=tests/cli --ignore=tests/integration/usage_statistics\""
               echo ${PYTEST}
               eval ${PYTEST}
             displayName: 'Pytest MySQL'
@@ -306,7 +306,7 @@ stages:
           - bash: |
               DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
               PYTEST="docker run --network=host greatexpectations/test:${DOCKER_TAG} "
-              PYTEST+="pytest --trino --ignore=tests/cli --ignore=tests/integration/usage_statistics"
+              PYTEST+="pytest --trino --random-order --ignore=tests/cli --ignore=tests/integration/usage_statistics"
               echo ${PYTEST}
               eval ${PYTEST}
             displayName: 'Pytest Trino'
@@ -330,7 +330,7 @@ stages:
           - bash: |
               DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
               PYTEST="docker run --network=host greatexpectations/test:${DOCKER_TAG} "
-              PYTEST+="pytest --postgresql --spark --aws-integration tests/cli"
+              PYTEST+="pytest --postgresql --spark --aws-integration --random-order tests/cli"
               echo ${PYTEST}
               eval ${PYTEST}
             displayName: 'Pytest cli'
@@ -360,7 +360,7 @@ stages:
               PYTEST="docker run --network=host greatexpectations/test:${DOCKER_TAG} bash -c \""
               PYTEST+="printf 'Y\nY\n' | pip uninstall numpy pandas && "
               PYTEST+="printf 'Y\nY\n' | pip install numpy==$(min_numpy) pandas==$(min_pandas) && "
-              PYTEST+="pytest --no-sqlalchemy --ignore=tests/cli --ignore=tests/integration/usage_statistic\""
+              PYTEST+="pytest --random-order --no-sqlalchemy --ignore=tests/cli --ignore=tests/integration/usage_statistic\""
               echo ${PYTEST}
               eval ${PYTEST}
             displayName: 'Pytest min versions'
@@ -382,7 +382,7 @@ stages:
           - bash: |
               DOCKER_TAG="$(python.version)_$(IMAGE_SUFFIX)"
               PYTEST="docker run --network=host greatexpectations/test:${DOCKER_TAG} "
-              PYTEST+="pytest --no-sqlalchemy --aws-integration tests/integration/usage_statistics"
+              PYTEST+="pytest --random-order --no-sqlalchemy --aws-integration tests/integration/usage_statistics"
               echo ${PYTEST}
               eval ${PYTEST}
             displayName: 'Pytest Usage Stats'
@@ -458,7 +458,7 @@ stages:
 
           - script: |
               pip install pytest pytest-cov pytest-azurepipelines
-              pytest --mssql --napoleon-docstrings --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html --ignore=tests/cli --ignore=tests/integration/usage_statistics
+              pytest --mssql --random-order  --napoleon-docstrings --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html --ignore=tests/cli --ignore=tests/integration/usage_statistics
             displayName: 'pytest'
 
   - stage: deploy
