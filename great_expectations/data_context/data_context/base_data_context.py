@@ -1286,11 +1286,11 @@ class BaseDataContext(EphemeralDataContext, ConfigPeer):
         save_changes: bool = False,
     ) -> None:
         """
-        Updates a DatasourceConfig that already exists in the store.
+        Updates a DatasourceConfig that already exists in the store using an instantiated Datasource.
 
         Args:
-            datasource_config: The config object to persist using the DatasourceStore.
-            save_changes: do I save changes to disk?
+            datasource: The Datasource object whose config to persist using the DatasourceStore.
+            save_changes: Do I save changes to the store?
         """
         datasource_config_dict: dict = datasourceConfigSchema.dump(datasource.config)
         datasource_config = DatasourceConfig(**datasource_config_dict)
@@ -1301,7 +1301,7 @@ class BaseDataContext(EphemeralDataContext, ConfigPeer):
                 datasource_name=datasource_name, datasource_config=datasource_config
             )
         self.config.datasources[datasource_name] = datasource_config  # type: ignore[assignment,index]
-        self._cached_datasources[datasource_name] = datasource_config
+        self._cached_datasources[datasource_name] = datasource
 
     def add_batch_kwargs_generator(
         self, datasource_name, batch_kwargs_generator_name, class_name, **kwargs
