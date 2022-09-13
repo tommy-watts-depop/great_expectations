@@ -1,5 +1,11 @@
 import copy
 import logging
+from typing import Optional
+
+try:
+    import sqlalchemy as sa
+except ImportError:
+    sa = None
 
 from great_expectations.datasource.data_connector.configured_asset_sql_data_connector import (
     ConfiguredAssetSqlDataConnector,
@@ -24,12 +30,15 @@ class SimpleSqlalchemyDatasource(BaseDatasource):
     def __init__(
         self,
         name: str,
-        connection_string: str = None,
-        url: str = None,
-        credentials: dict = None,
-        engine=None,  # sqlalchemy.engine.Engine
-        introspection: dict = None,
-        tables: dict = None,
+        connection_string: Optional[str] = None,
+        url: Optional[str] = None,
+        credentials: Optional[dict] = None,
+        # engine is actually a required argument and an exception will be raised if it isn't set.
+        # However, it is marked as optional since it has a default value of None and we need to
+        # maintain argument order in case anyone is using positional arguments.
+        engine: "Optional[sa.engine.Engine]" = None,
+        introspection: Optional[dict] = None,
+        tables: Optional[dict] = None,
         **kwargs
     ) -> None:
         introspection = introspection or {}
