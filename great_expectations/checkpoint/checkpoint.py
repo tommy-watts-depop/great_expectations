@@ -404,6 +404,8 @@ class BaseCheckpoint(ConfigPeer):
 
             validation_id: Optional[str] = substituted_validation_dict.get("id")
 
+            # BDIRKS - The next line is in the exception path
+            # This throws a MetricError which is caught below.
             async_validation_operator_result = async_executor.submit(
                 action_list_validation_operator.run,
                 assets_to_validate=[validator],
@@ -423,9 +425,11 @@ class BaseCheckpoint(ConfigPeer):
             ge_exceptions.ExecutionEngineError,
             ge_exceptions.MetricError,
         ) as e:
+            # BDIRKS - This is in the exception path. The exception is a MetricError
+            # I've added exception chaining here.
             raise ge_exceptions.CheckpointError(
                 f"Exception occurred while running validation[{idx}] of Checkpoint '{self.name}': {e.message}."
-            )
+            ) from e
 
     def self_check(self, pretty_print=True) -> dict:
         # Provide visibility into parameters that Checkpoint was instantiated with.

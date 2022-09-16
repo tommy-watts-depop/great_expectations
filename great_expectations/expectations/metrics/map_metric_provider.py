@@ -2017,6 +2017,8 @@ def _sqlalchemy_column_map_condition_values(
     Particularly for the purpose of finding unexpected values, returns all the metric values which do not meet an
     expected Expectation condition for ColumnMapExpectation Expectations.
     """
+    # BDIRKS unexpected_condition is a sqlalchemy.sql.elements.BooleanClauseList object
+    # breakpoint()
     unexpected_condition, compute_domain_kwargs, accessor_domain_kwargs = metrics.get(
         "unexpected_condition"
     )
@@ -2057,6 +2059,20 @@ def _sqlalchemy_column_map_condition_values(
         )
         query = query.limit(10000)  # BigQuery upper bound on query parameters
 
+    # BDIRKS - We can print the failing queries here in both pre-compiled and compiled form
+    print("BDIRKS QUERY")
+    print(query)
+    # SELECT store_and_fwd_flag AS unexpected_values
+    # FROM ge_temp_b0dcfaf4
+    # WHERE store_and_fwd_flag IS NOT NULL AND(store_and_fwd_flag NOT IN(__[POSTCOMPILE_store_and_fwd_flag_1]))
+    # LIMIT: param_1
+    #
+    # print(query.compile(execution_engine))
+    # SELECT `store_and_fwd_flag` AS `unexpected_values`
+    # FROM `ge_temp_b0dcfaf4` WHERE `store_and_fwd_flag` IS NOT NULL AND(`store_and_fwd_flag` NOT IN UNNEST( % (store_and_fwd_flag_1:BOOL)s))
+    # LIMIT % (param_1:INT64)s
+    print("BDIRKS COMPILED QUERY")
+    print(query.compile(execution_engine))
     return [
         val.unexpected_values
         for val in execution_engine.engine.execute(query).fetchall()

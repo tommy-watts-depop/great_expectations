@@ -308,6 +308,8 @@ class ExecutionEngine(ABC):
         Returns:
             resolved_metrics (Dict): a dictionary with the values for the metrics that have just been resolved.
         """
+        from pprint import pprint
+        pprint(f"BDIRKS metrics: {metrics}")
         if metrics is None:
             metrics = {}
 
@@ -326,8 +328,15 @@ class ExecutionEngine(ABC):
         k: Tuple[str, str, str]
         v: MetricConfiguration
         for metric_to_resolve in metrics_to_resolve:
+            # BDIRKS
+            # if metric_to_resolve.metric_name == "column_values.in_set.unexpected_values":
+            #    breakpoint()
+            # print(f"BDIRKS metric_to_resolve: {metric_to_resolve}")
+            # metric_to_resolve["metric_name"] == "column_values.in_set.unexpected_values"
             metric_dependencies = {}
             for k, v in metric_to_resolve.metric_dependencies.items():
+                #if metric_to_resolve.metric_name == "column_values.in_set.unexpected_values" and k == "unexpected_condition":
+                #    breakpoint()
                 if v.id in metrics:
                     metric_dependencies[k] = metrics[v.id]
                 elif self._caching and v.id in self._metric_cache:
@@ -390,13 +399,19 @@ class ExecutionEngine(ABC):
 
             try:
                 # NOTE: DH 20220328: This is where we can introduce the Batch Metrics Store (BMS)
+
+                # BDIRKS - This is the last point of execution in our code.
+                # metric_fn is '<function _sqlalchemy_column_map_condition_values at 0x7fd91654c5e0>
+                # if metric_to_resolve.metric_name != "column_values.in_set.unexpected_values":
+                #     breakpoint()
                 resolved_metrics[metric_to_resolve.id] = metric_fn(
                     **metric_provider_kwargs
                 )
             except Exception as e:
+                print(f"BDIRKS metrics to resolve: {metric_to_resolve}")
                 raise ge_exceptions.MetricResolutionError(
                     message=str(e), failed_metrics=(metric_to_resolve,)
-                )
+                ) from e
 
         if len(metric_fn_bundle) > 0:
             try:
