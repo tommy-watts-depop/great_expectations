@@ -1,24 +1,23 @@
 stages:
-  - stage: cloud_db_integration_and_performance_tests
+  - stage: instantiate_composer_and_install_ge
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
-      - job: composer_ge_install
-        timeoutInMinutes: 60 # this should be more than sufficient since the performance typically runs < 5 min
+    - job: composer_ge_install
+      timeoutInMinutes: 60 # this should be more than sufficient since the performance typically runs < 5 min
+      steps:
+        - task: UsePythonVersion@0
+          inputs:
+          versionSpec: '$(python.version)'
+          displayName: 'Use Python $(python.version)'
 
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-            versionSpec: '$(python.version)'
-            displayName: 'Use Python $(python.version)'
-
-          - bash: gcloud composer environments create composer-1-temporary-env --location=us-east1 --zone=us-east1-b --machine-type=n1-standard-8
-            displayName: 'spin up Google Composer environment'
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: $(gcp_authkey.secureFilePath)
-          GE_TEST_GCP_PROJECT: $(GE_TEST_GCP_PROJECT)
-          GE_TEST_BIGQUERY_DATASET: $(GE_TEST_BIGQUERY_DATASET)
-          GE_TEST_BIGQUERY_PERFORMANCE_DATASET: $(GE_TEST_BIGQUERY_PERFORMANCE_DATASET)
+        - bash: gcloud composer environments create composer-1-temporary-env --location=us-east1 --zone=us-east1-b --machine-type=n1-standard-8
+          displayName: 'spin up Google Composer environment'
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: $(gcp_authkey.secureFilePath)
+        GE_TEST_GCP_PROJECT: $(GE_TEST_GCP_PROJECT)
+        GE_TEST_BIGQUERY_DATASET: $(GE_TEST_BIGQUERY_DATASET)
+        GE_TEST_BIGQUERY_PERFORMANCE_DATASET: $(GE_TEST_BIGQUERY_PERFORMANCE_DATASET)
 
 
     # jobs:
