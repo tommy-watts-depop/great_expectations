@@ -10,7 +10,7 @@ stages:
           displayName: 'install gcloud 1 - adding URI as package source'
         - bash: curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
           displayName: 'install gcloud 2 - import Google Cloud public key'
-        - bash: sudo snap install google-cloud-cli
+        - bash: deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
           displayName: 'install gcloud 3 - update and install gcloud CLI'
 
         # - script: |
