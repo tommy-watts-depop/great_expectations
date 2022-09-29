@@ -12,24 +12,19 @@ stages:
           displayName: 'install gcloud 2 - import Google Cloud public key'
         - bash: sudo snap install google-cloud-cli --classic
           displayName: 'install gcloud 3 - update and install gcloud CLI'
-
-        # - script: |
-        #     pip install google-cloud-bigquery-storage
-        #   displayName: 'Install Google Cloud dependencies'
-        # - task: DownloadSecureFile@1
-        #   name: gcp_authkey
-        #   displayName: 'Download Google Service Account'
-        #   inputs:
-        #     secureFile: 'superconductive-service-acct_ge-oss-ci-cd.json'
-        #     retryCount: '2'
-        #
-        # - bash: gcloud composer environments create composer-1-temporary-env --location=us-east1 --zone=us-east1-b --machine-type=n1-standard-8
-        #   displayName: 'spin up Google Composer environment'
-        #   env:
-        #     GOOGLE_APPLICATION_CREDENTIALS: $(gcp_authkey.secureFilePath)
-        #     GE_TEST_GCP_PROJECT: $(GE_TEST_GCP_PROJECT)
-        #     GE_TEST_BIGQUERY_DATASET: $(GE_TEST_BIGQUERY_DATASET)
-        #     GE_TEST_BIGQUERY_PERFORMANCE_DATASET: $(GE_TEST_BIGQUERY_PERFORMANCE_DATASET)
+        - task: DownloadSecureFile@1
+          name: gcp_authkey
+          displayName: 'Download Google Service Account'
+          inputs:
+            secureFile: 'superconductive-service-acct_ge-oss-ci-cd.json'
+            retryCount: '2'
+        - bash: gcloud composer environments create composer-1-temporary-env --location=us-east1 --zone=us-east1-b --machine-type=n1-standard-8
+          displayName: 'spin up Google Composer environment'
+          env:
+            GOOGLE_APPLICATION_CREDENTIALS: $(gcp_authkey.secureFilePath)
+            GE_TEST_GCP_PROJECT: $(GE_TEST_GCP_PROJECT)
+            GE_TEST_BIGQUERY_DATASET: $(GE_TEST_BIGQUERY_DATASET)
+            GE_TEST_BIGQUERY_PERFORMANCE_DATASET: $(GE_TEST_BIGQUERY_PERFORMANCE_DATASET)
 
 
     # jobs:
