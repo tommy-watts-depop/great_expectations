@@ -27,7 +27,7 @@ stages:
             GE_TEST_BIGQUERY_DATASET: $(GE_TEST_BIGQUERY_DATASET)
             GE_TEST_BIGQUERY_PERFORMANCE_DATASET: $(GE_TEST_BIGQUERY_PERFORMANCE_DATASET)
 
-        - bash: gcloud composer environments create composer-1-temporary-env --location=us-east1 --zone=us-east1-b --machine-type=n1-standard-8
+        - bash: gcloud composer environments create composer-1-temporary-env --location=us-east1 --zone=us-east1-b --machine-type=n1-standard-8 --service-account "service-account-ci-cd@ge-oss-ci-cd.iam.gserviceaccount.com"
           displayName: 'spin up Google Composer environment'
           env:
             GOOGLE_APPLICATION_CREDENTIALS: $(gcp_authkey.secureFilePath)
